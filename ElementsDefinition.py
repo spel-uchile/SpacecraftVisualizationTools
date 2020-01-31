@@ -16,7 +16,7 @@ class GeoDef(object):
         sphere = examples.load_globe()
         sphere.points /= 1000
         self.sphere = sphere
-        self.vtk_widget.add_mesh(self.sphere)
+        self.vtk_widget.add_mesh(self.sphere, smooth_shading=True)
         self.sphere.rotate_z(0)
         self.vtk_widget.view_isometric()
         #self.vtk_widget.reset_camera()
@@ -32,7 +32,8 @@ class GeoDef(object):
     def add_spacecraft_2_orbit(self):
         self.vtk_widget.subplot(0, 0)
         self.spacecraft_in_orbit = pv.PolyData('./Model/PlantSat/PlantSat.stl')
-        self.spacecraft_in_orbit.translate(np.array([0, 0, -34.05 / 2]))
+        # self.spacecraft_in_orbit.translate(np.array([0, 0, -34.05 / 2]))
+        self.spacecraft_in_orbit.translate(-self.spacecraft_in_orbit.center_of_mass())
         self.spacecraft_in_orbit.points *= 15000.0
         self.vtk_widget.add_mesh(self.spacecraft_in_orbit)
         self.spacecraft_in_orbit.translate(self.datalog.sat_pos_i[0, :])
@@ -56,20 +57,22 @@ class GeoDef(object):
     def add_b_frame_attitude(self):
         center_ref = np.array([[0.0, 0.0, 0.0]])
         self.vtk_widget.subplot(0, 1)
-        self.body_x = pv.Arrow(center_ref, [30, 0, 0])
-        self.body_y = pv.Arrow(center_ref, [0, 30, 0])
-        self.body_z = pv.Arrow(center_ref, [0, 0, 30])
-        self.body_x.transform(self.KMatrix)
-        self.body_y.transform(self.KMatrix)
-        self.body_z.transform(self.KMatrix)
-        self.vtk_widget.add_mesh(self.body_x, color=[100, 0, 0])
-        self.vtk_widget.add_mesh(self.body_y, color=[0, 100, 0])
-        self.vtk_widget.add_mesh(self.body_z, color=[0, 0, 100])
+        self.body_x = pv.Arrow(center_ref, [1, 0, 0])
+        self.body_y = pv.Arrow(center_ref, [0, 1, 0])
+        self.body_z = pv.Arrow(center_ref, [0, 0, 1])
+
+        self.body_x.transform(self.KMatrix.dot(np.identity(4)*np.array([30, 15, 15, 1])))
+        self.body_y.transform(self.KMatrix.dot(np.identity(4)*np.array([15, 30, 15, 1])))
+        self.body_z.transform(self.KMatrix.dot(np.identity(4)*np.array([15, 15, 30, 1])))
+        self.vtk_widget.add_mesh(self.body_x, color=[50, 0, 0])
+        self.vtk_widget.add_mesh(self.body_y, color=[0, 50, 0])
+        self.vtk_widget.add_mesh(self.body_z, color=[0, 0, 50])
 
     def add_bar(self):
         self.vtk_widget.subplot(0, 0)
         self.vtk_widget.add_slider_widget(self.sim_speed, [0.5, 100], value = 1, title='Simulation speed')
 
     def add_aries_arrow(self):
+        self.vtk_widget.subplot(0, 0)
         self.vtk_widget.add_arrows(cent=np.array([[0.0, 0.0, 0.0]]),
-                                   direction = np.array([1, 0, 0]), mag=10000, color=[0, 0, 0])
+                                   direction = np.array([100000, 0, 0]), mag=1, color=[0, 0, 0])

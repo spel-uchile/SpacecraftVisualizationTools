@@ -5,7 +5,9 @@ Created on Thu Jan 16 02:47:18 2020
 @author: EO
 """
 import sys
-from PyQt5 import Qt
+from PyQt5.Qt import *
+from PyQt5 import QtWidgets
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import QFileDialog
 from threading import Thread
 import time
@@ -16,9 +18,10 @@ import pandas as pd
 from Graphics import MainGraph
 from datalogcsv import DataHandler
 from pyquaternion import Quaternion
+from forms.main_screen_ui import Ui_MainWindow
 
 
-class Viewer(GeoDef, Qt.QMainWindow):
+class Viewer(GeoDef, QtWidgets.QMainWindow):
 
     def __init__(self, parent=None, show=True):
         self.time_speed = 1
@@ -29,22 +32,28 @@ class Viewer(GeoDef, Qt.QMainWindow):
         self.thread = None
         self.countTime = 0
         self.screen = None
+        self.simulation_index = -1
 
-        Qt.QMainWindow.__init__(self, parent)
-        # create the frame
-        self.frame = Qt.QFrame()
-        vlayout = Qt.QVBoxLayout()
+        QMainWindow.__init__(self, parent)
+        self.window = Ui_MainWindow()
+        self.window.setupUi(self)
 
-        # add the pyvista interactor object
-        self.vtk_widget = pv.QtInteractor(self.frame, shape=(1, 2))
+        # Set-up signals and slots
+        # self.window.actionGeneratePlot.triggered.connect(self.plot_slot)
+        # self.window.control_spinbox.valueChanged.connect(self.window.control_slider.setValue)
+        # self.window.control_slider.valueChanged.connect(self.window.control_spinbox.setValue)
+
+
+        #########################################
+
+        vlayout = QVBoxLayout()
+        self.window.view_frame.setLayout(vlayout)
+
+        self.vtk_widget = pv.QtInteractor(self.window.view_frame, shape=(1, 2))
         self.vtk_widget.set_background([0.25, 0.25, 0.25])
-        self.vtk_widget.setFixedWidth(1000)
-        self.vtk_widget.setFixedHeight(500)
         vlayout.addWidget(self.vtk_widget)
-        GeoDef.__init__(self, self.vtk_widget)
 
-        self.frame.setLayout(vlayout)
-        self.setCentralWidget(self.frame)
+        GeoDef.__init__(self, self.vtk_widget)
 
         self.add_bar()
         self.add_i_frame_attitude()
@@ -54,64 +63,41 @@ class Viewer(GeoDef, Qt.QMainWindow):
         main_menu = self.menuBar()
         # --------------------------------------------------------------------------------------------------------------
         # File option
-        fileMenu = main_menu.addMenu('File')
-        loadcsvData = Qt.QAction('Load csv data', self)
-        exitButton = Qt.QAction('Exit', self)
-
-        exitButton.setShortcut('Ctrl+Q')
-        loadcsvData.triggered.connect(self.load_csv_file)
-        exitButton.triggered.connect(self.close)
-        fileMenu.addAction(loadcsvData)
-        fileMenu.addAction(exitButton)
+        self.window.actionLoadCsv.triggered.connect(self.load_csv_file)
         # --------------------------------------------------------------------------------------------------------------
         # Path Orbit option
-        orb_menu = main_menu.addMenu('Orbit')
-        # orbit_action    = Qt.QAction('Show Orbit', self)
-        # cad_action      = Qt.QAction('Add satellite', self)
-        aries_action = Qt.QAction('Add vector to Vernal Equinox', self)
-
-        # orbit_action.triggered.connect(self.add_orbit)
-        # cad_action.triggered.connect(self.add_spacecraft_2_orbit)
-        aries_action.triggered.connect(self.add_aries_arrow)
+        # aries_action = QAction('Add vector to Vernal Equinox', self)
 
         # orb_menu.addAction(orbit_action)
         # orb_menu.addAction(cad_action)
-        orb_menu.addAction(aries_action)
+        # orb_menu.addAction(aries_action)
         # --------------------------------------------------------------------------------------------------------------
         # Attitude
         # AttMenu         = main_menu.addMenu('Attitude')
-        # sat_action      = Qt.QAction('Add satellite', self)
-        # frame_action    = Qt.QAction('Add Body reference frame', self)
-        #
+        # sat_action      = QAction('Add satellite', self)
+        # frame_action    = QAction('Add Body reference frame', self)
+
         # sat_action.triggered.connect(self.add_spacecraft_2_attitude)
         # frame_action.triggered.connect(self.add_b_frame_attitude)
         # AttMenu.addAction(sat_action)
         # AttMenu.addAction(frame_action)
         # --------------------------------------------------------------------------------------------------------------
         # Simulation option
-        sim_menu = main_menu.addMenu('Simulation')
-        run_action = Qt.QAction('Run', self)
-        pause_action = Qt.QAction('Pause', self)
-        stop_action = Qt.QAction('Stop', self)
+        # sim_menu = main_menu.addMenu('Simulation')
+        # run_action = QAction('Run', self)
+        # pause_action = QAction('Pause', self)
+        # stop_action = QAction('Stop', self)
 
-        run_action.triggered.connect(self.run_simulation)
-        pause_action.triggered.connect(self.pause_simulation)
-        stop_action.triggered.connect(self.stop_simulation)
+        self.window.actionRun.triggered.connect(self.run_simulation)
+        self.window.actionPause.triggered.connect(self.pause_simulation)
+        self.window.actionStop.triggered.connect(self.stop_simulation)
 
-        sim_menu.addAction(run_action)
-        sim_menu.addAction(pause_action)
-        sim_menu.addAction(stop_action)
+        # sim_menu.addAction(run_action)
+        # sim_menu.addAction(pause_action)
+        # sim_menu.addAction(stop_action)
         # --------------------------------------------------------------------------------------------------------------
-        graph2d_menu = main_menu.addMenu('Data')
-        plot_action = Qt.QAction('Generate graph', self)
-
-        plot_action.triggered.connect(self.add_graph2d)
-
-        graph2d_menu.addAction(plot_action)
+        self.window.actionGeneratePlot.triggered.connect(self.add_graph2d)
         # --------------------------------------------------------------------------------------------------------------
-
-        if show:
-            self.show()
 
     def add_graph2d(self):
         self.screen = MainGraph(self.datalog)
@@ -128,8 +114,8 @@ class Viewer(GeoDef, Qt.QMainWindow):
         filename, _ = QFileDialog.getOpenFileName(self, "Select CSV data file", "", "CSV Files (*.csv)",
                                                   options=options)
         if filename:
-            dataLog = read_data(filename)
-            self.datalog = DataHandler(dataLog)
+            data_log = read_data(filename)
+            self.datalog = DataHandler(data_log)
             self.datalog.create_variable()
 
             # Add actors to orbit view
@@ -147,6 +133,8 @@ class Viewer(GeoDef, Qt.QMainWindow):
 
     def run_simulation(self):
         self.run_flag = True
+        self.stop_flag = False
+        self.pause_flag = False
         self.run_orbit_3d()
         print('Running...')
 
@@ -156,10 +144,16 @@ class Viewer(GeoDef, Qt.QMainWindow):
         print('Paused...')
 
     def stop_simulation(self):
-        return
+        self.stop_flag = True
+        if self.thread:
+            self.thread.join()
+            self.thread = None
+        self.update_meshes(0)
+        self.reset_time()
 
     def reset_time(self):
         self.countTime = 0
+        self.simulation_index = 1
 
     def update_time(self):
         self.countTime += self.datalog.stepTime
@@ -168,9 +162,13 @@ class Viewer(GeoDef, Qt.QMainWindow):
         # Update Earth
         self.sphere.rotate_z(10)
 
+        if index == 0:
+            print('Reseting')
+
         # Update Orbit
-        self.current_pos = self.datalog.sat_pos_i[index, :] - self.datalog.sat_pos_i[index - 1, :]
-        self.spacecraft_in_orbit.translate(self.current_pos)
+        tr_vector = self.datalog.sat_pos_i[index, :] - self.datalog.sat_pos_i[index - 1, :] if index != 0 \
+            else  self.datalog.sat_pos_i[0, :] - self.spacecraft_in_orbit.center_of_mass()
+        self.spacecraft_in_orbit.translate(tr_vector)
 
         # Update Attitude
         self.update_attitude(index)
@@ -180,20 +178,22 @@ class Viewer(GeoDef, Qt.QMainWindow):
 
     def rotate_th(self):
         self.vtk_widget.subplot(0, 0)
-        i = 1
         self.reset_time()
-        while self.countTime < self.datalog.endTime:
-
-            while self.pause_flag:
-                if self.run_flag:
-                    self.pause_flag = False
-
-            self.update_meshes(i)
+        while not self.stop_flag and self.countTime < self.datalog.endTime:
+            self.update_meshes(self.simulation_index)
             time.sleep(self.datalog.stepTime / self.time_speed)
 
             # Update time
             self.update_time()
-            i += 1
+            self.simulation_index += 1
+
+            while self.pause_flag:
+                if self.stop_flag:
+                    return
+                elif self.run_flag:
+                    self.pause_flag = False
+                else:
+                    time.sleep(1)
 
     def run_orbit_3d(self):
         if self.thread is None:
@@ -217,6 +217,7 @@ class Viewer(GeoDef, Qt.QMainWindow):
 
 
 if __name__ == '__main__':
-    app = Qt.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     window = Viewer()
+    window.show()
     sys.exit(app.exec_())
