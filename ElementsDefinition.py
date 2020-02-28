@@ -9,6 +9,7 @@ class GeoDef(object):
 
     def __init__(self, vtk_widget):
         self.vtk_widget = vtk_widget
+        self.show_nadir= False
 
     #def add_sphere(self):
         # add a sphere to the pyqt frame
@@ -54,7 +55,7 @@ class GeoDef(object):
         self.vtk_widget.add_arrows(cent=center_ref, direction=np.array([0, 1, 0]), mag=30, color='green')
         self.vtk_widget.add_arrows(cent=center_ref, direction=np.array([1, 0, 0]), mag=30, color='red')
 
-    def add_b_frame_attitude(self):
+    def add_b_frame_attitude(self, show_nadir=False):
         center_ref = np.array([[0.0, 0.0, 0.0]])
         self.vtk_widget.subplot(0, 1)
         self.body_x = pv.Arrow(center_ref, [1, 0, 0])
@@ -67,6 +68,17 @@ class GeoDef(object):
         self.vtk_widget.add_mesh(self.body_x, color=[50, 0, 0])
         self.vtk_widget.add_mesh(self.body_y, color=[0, 50, 0])
         self.vtk_widget.add_mesh(self.body_z, color=[0, 0, 50])
+
+        if show_nadir:
+            self.show_nadir = True
+            self.nadir_0 = self.datalog.nadir_t_b[0, :]
+            # self.nadir_0 = self.datalog.sat_pos_i[0, :]/np.linalg.norm(self.datalog.sat_pos_i[0, :])
+            self.body_nadir = pv.Arrow(center_ref, self.nadir_0)
+            self.body_nadir.transform(np.identity(4)*np.array([25, 25, 25, 1]))
+
+            self.vtk_widget.add_mesh(self.body_nadir, color=[60, 63, 65])
+
+
 
     def add_bar(self):
         self.vtk_widget.subplot(0, 0)

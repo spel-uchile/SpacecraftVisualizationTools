@@ -50,14 +50,14 @@ class MainGraph(object):
         p2.plot(self.datalog.time, self.datalog.omega_t_b[:, 2], pen=(0,0,255), name="omega_t_b(Z)")
         p2.showGrid(x=True, y=True)
         diam = 2
-        p2.plot(self.datalog.time, self.datalog.gyro_omega[:, 0], pen=None, symbolBrush=(240,0,0),
-                symbolPen='w', symbolSize = diam, name="gyro_omega1_c(X)")
-        p2.plot(self.datalog.time, self.datalog.gyro_omega[:, 1], pen=None, symbolBrush=(0,240,0),
-                symbolPen='w', symbolSize = diam, name="gyro_omega1_c(Y)")
-        p2.plot(self.datalog.time, self.datalog.gyro_omega[:, 2], pen=None, symbolBrush=(0,0,240),
-                symbolPen='w', symbolSize = diam, name="gyro_omega1_c(Z)")
-        p2.setLabel('left', "Omega_b [rad/s]")
-        p2.setLabel('bottom', "Time [s]")
+        # p2.plot(self.datalog.time, self.datalog.gyro_omega[:, 0], pen=None, symbolBrush=(240,0,0),
+        #         symbolPen='w', symbolSize = diam, name="gyro_omega1_c(X)")
+        # p2.plot(self.datalog.time, self.datalog.gyro_omega[:, 1], pen=None, symbolBrush=(0,240,0),
+        #         symbolPen='w', symbolSize = diam, name="gyro_omega1_c(Y)")
+        # p2.plot(self.datalog.time, self.datalog.gyro_omega[:, 2], pen=None, symbolBrush=(0,0,240),
+        #         symbolPen='w', symbolSize = diam, name="gyro_omega1_c(Z)")
+        # p2.setLabel('left', "Omega_b [rad/s]")
+        # p2.setLabel('bottom', "Time [s]")
 
     def plot3(self):
         p3 = self.win.addPlot(title="Quaternion_t_i2b [rad]")
@@ -93,12 +93,12 @@ class MainGraph(object):
 
     def plot7(self):
         p7 = self.win.addPlot(title="torque_t_b [Nm]")
-        p7.plot(self.datalog.time, self.datalog.torque_t_b[:, 0], pen=(255, 0, 0), name="torque_t_b(X)[Nm]")
-        p7.plot(self.datalog.time, self.datalog.torque_t_b[:, 1], pen=(0, 255, 0), name="torque_t_b(Y)[Nm]")
-        p7.plot(self.datalog.time, self.datalog.torque_t_b[:, 2], pen=(0, 0, 255), name="torque_t_b(Z)[Nm]")
-        p7.showGrid(x=True, y=True)
-        p7.setLabel('left', "Torque_t_b [Nm]")
-        p7.setLabel('bottom', "Time [s]")
+        # p7.plot(self.datalog.time, self.datalog.torque_t_b[:, 0], pen=(255, 0, 0), name="torque_t_b(X)[Nm]")
+        # p7.plot(self.datalog.time, self.datalog.torque_t_b[:, 1], pen=(0, 255, 0), name="torque_t_b(Y)[Nm]")
+        # p7.plot(self.datalog.time, self.datalog.torque_t_b[:, 2], pen=(0, 0, 255), name="torque_t_b(Z)[Nm]")
+        # p7.showGrid(x=True, y=True)
+        # p7.setLabel('left', "Torque_t_b [Nm]")
+        # p7.setLabel('bottom', "Time [s]")
 
     def plot8(self):
         x2 = np.linspace(-100, 100, 1000)

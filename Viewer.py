@@ -125,7 +125,7 @@ class Viewer(GeoDef, QtWidgets.QMainWindow):
 
             # Add actors to attitude view
             self.add_spacecraft_2_attitude()
-            self.add_b_frame_attitude()
+            self.add_b_frame_attitude(True)
 
             print('Data log created')
         else:
@@ -204,16 +204,30 @@ class Viewer(GeoDef, QtWidgets.QMainWindow):
         self.time_speed = value
         return
 
-    def update_attitude(self, i):
-        quaternion_ti = Quaternion(self.datalog.q_t_i2b[i, :])
+    def update_attitude(self, n):
+        quaternion_tn = Quaternion(self.datalog.q_t_i2b[n, :])
         inv_quaternion = self.quaternion_t0.inverse
-        d_quaternion = inv_quaternion*quaternion_ti
+        d_quaternion = inv_quaternion*quaternion_tn
         KMatrix = d_quaternion.transformation_matrix
         self.body_x.transform(KMatrix)
         self.body_y.transform(KMatrix)
         self.body_z.transform(KMatrix)
         self.spacecraft_in_attitude.transform(KMatrix)
-        self.quaternion_t0 = quaternion_ti
+        self.quaternion_t0 = quaternion_tn
+
+        #nadir
+        if self.show_nadir:
+            nadir_tn_i = self.datalog.sat_pos_i[n, :]
+            nadir_tn_i = - nadir_tn_i / np.linalg.norm(nadir_tn_i)
+            # nadir_tn_b = quaternion_tn.rotate(nadir_tn_i)
+            # nadir_tn_b = self.datalog.nadir_t_b[n, :]
+            tar_v = nadir_tn_i
+
+            vec = np.cross(self.nadir_0, tar_v)
+            ang = np.arccos(np.dot(self.nadir_0, tar_v))
+            self.body_nadir.transform(Quaternion(axis=vec, angle=ang).transformation_matrix)
+            self.nadir_0 = tar_v
+
 
 
 if __name__ == '__main__':
