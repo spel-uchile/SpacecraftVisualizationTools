@@ -19,6 +19,7 @@ from Graphics import MainGraph
 from datalogcsv import DataHandler
 from pyquaternion import Quaternion
 from forms.main_screen_ui import Ui_MainWindow
+from pyvista.utilities import translate
 
 
 class Viewer(GeoDef, QtWidgets.QMainWindow):
@@ -125,7 +126,7 @@ class Viewer(GeoDef, QtWidgets.QMainWindow):
 
             # Add actors to attitude view
             self.add_spacecraft_2_attitude()
-            self.add_b_frame_attitude(True)
+            self.add_b_frame_attitude(show_nadir=True)
 
             print('Data log created')
         else:
@@ -205,15 +206,22 @@ class Viewer(GeoDef, QtWidgets.QMainWindow):
         return
 
     def update_attitude(self, n):
-        quaternion_tn = Quaternion(self.datalog.q_t_i2b[n, :])
+        quaternion_tn = Quaternion(self.datalog.q_t_i2b[n, :]).unit
         inv_quaternion = self.quaternion_t0.inverse
-        d_quaternion = inv_quaternion*quaternion_tn
+        d_quaternion = quaternion_tn*inv_quaternion
+
         KMatrix = d_quaternion.transformation_matrix
         self.body_x.transform(KMatrix)
         self.body_y.transform(KMatrix)
         self.body_z.transform(KMatrix)
         self.spacecraft_in_attitude.transform(KMatrix)
+        # q0 = self.quaternion_t0
+        # prev_vector = self.prev_vector
         self.quaternion_t0 = quaternion_tn
+        # self.prev_vector = d_quaternion.rotate(self.prev_vector)
+        # print('vector:', self.prev_vector)
+        # print('z pointing: ', quaternion_tn.rotate([0,0,1]))
+        # print('------------------------')
 
         #nadir
         if self.show_nadir:
@@ -222,11 +230,22 @@ class Viewer(GeoDef, QtWidgets.QMainWindow):
             # nadir_tn_b = quaternion_tn.rotate(nadir_tn_i)
             # nadir_tn_b = self.datalog.nadir_t_b[n, :]
             tar_v = nadir_tn_i
+            print(tar_v)
 
             vec = np.cross(self.nadir_0, tar_v)
             ang = np.arccos(np.dot(self.nadir_0, tar_v))
             self.body_nadir.transform(Quaternion(axis=vec, angle=ang).transformation_matrix)
             self.nadir_0 = tar_v
+
+            # ct_v = self.datalog.control_torque[n, :]
+            # ct_v = ct_v/ np.linalg.norm(ct_v)
+            # tar_v = ct_v
+            #
+            # vec = np.cross(self.ct0, tar_v)
+            # ang = np.arccos(np.dot(self.ct0, tar_v))
+            # self.body_control_torque.transform(Quaternion(axis=vec, angle=ang).transformation_matrix)
+            # self.ct0 = tar_v
+            # translate(self.control_torque, [0,0,0], self.datalog.control_torque[n, :])
 
 
 
