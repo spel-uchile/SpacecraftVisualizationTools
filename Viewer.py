@@ -12,7 +12,6 @@ from PyQt5.QtWidgets import QFileDialog
 from threading import Thread
 import time
 import numpy as np
-import pyvista as pv
 from pyvistaqt import QtInteractor
 from GeometricElements import GeometricElements
 import pandas as pd
