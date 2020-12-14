@@ -16,7 +16,9 @@ This tool was designed to visualize * .CSV data obtained from the spacecraft sim
 ### Installation
 
 pip install -r requirements.txt
- 
+
+Main file: **_Viewer.py_**
+
 ***Contact***
 
 - els.obrq@gmail.com
