@@ -19,8 +19,11 @@ import pandas as pd
 from Graphics import MainGraph
 from DataHandler import DataHandler
 from pyquaternion import Quaternion
-from forms.main_screen_ui import Ui_MainWindow
+from forms.main_screen_2 import Ui_MainWindow
 from pyvista.utilities import translate
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_qt5agg import (FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+from matplotlib.figure import Figure
 
 
 class Viewer(GeometricElements, QtWidgets.QMainWindow):
@@ -59,8 +62,14 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         self.vtk_widget.set_background([0.25, 0.25, 0.25])
         vlayout.addWidget(self.vtk_widget)
 
-        GeometricElements.__init__(self, self.vtk_widget)
+        self.preview_plot_widget = QtWidgets.QVBoxLayout(self.window.PlotWidget)
+        self.canvas_ = FigureCanvas(Figure(figsize=(5, 3)))
+        self.preview_plot_widget.addWidget(self.canvas_)
+        self.plot_canvas = self.canvas_.figure.subplots()
+        self.plot_canvas.grid()
+        self.plot_canvas.set_xlabel('Time [s]')
 
+        GeometricElements.__init__(self, self.vtk_widget)
         self.add_bar()
         self.add_i_frame_attitude()
 
@@ -105,7 +114,48 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         # sim_menu.addAction(stop_action)
         # --------------------------------------------------------------------------------------------------------------
         self.window.actionGeneratePlot.triggered.connect(self.add_graph2d)
+        self.window.PlotSelectedData.clicked.connect(self.plot_selected_data)
+        self.window.listWidget.clicked.connect(self.preview_plot_data)
         # --------------------------------------------------------------------------------------------------------------
+
+    def preview_plot_data(self):
+        self.plot_canvas.cla()
+        is_data = False
+        self.plot_canvas.grid()
+        self.plot_canvas.set_xlabel('Time [s]')
+        for index in range(self.window.listWidget.count()):
+            if self.window.listWidget.item(index).checkState() == Qt.Checked:
+                elem = self.data_handler.auxiliary_datalog_keys[index]
+                self.plot_canvas.plot(self.data_handler.basic_datalog['time[sec]'],
+                                      self.data_handler.auxiliary_datalog[elem], label=elem)
+                is_data = True
+        if is_data:
+            self.plot_canvas.legend()
+
+        self.canvas_.draw()
+        return
+
+    def plot_selected_data(self):
+        plt.figure()
+        plt.grid()
+        plt.xlabel('Time [s]')
+        for index in range(self.window.listWidget.count()):
+            if self.window.listWidget.item(index).checkState() == Qt.Checked:
+                elem = self.data_handler.auxiliary_datalog_keys[index]
+                plt.plot(self.data_handler.basic_datalog['time[sec]'],
+                         self.data_handler.auxiliary_datalog[elem], label=elem)
+        plt.legend()
+        plt.show()
+        return
+
+    def add_item_to_list(self):
+        _translate = QtCore.QCoreApplication.translate
+        for elem in self.data_handler.auxiliary_datalog_keys:
+            item = QtWidgets.QListWidgetItem()
+            item.setCheckState(QtCore.Qt.Unchecked)
+            item.setText(_translate("MainWindow", elem))
+            self.window.listWidget.addItem(item)
+        return
 
     def add_graph2d(self):
         self.screen = MainGraph(self.data_handler)
@@ -146,6 +196,7 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
                                  self.data_handler.basic_datalog[self.data_handler.basic_datalog_keys[4][3]]]).transpose()
         self.add_spacecraft_2_attitude(self.q_t_i2b)
         self.add_b_frame_attitude(show_nadir=False)
+        self.add_item_to_list()
 
     def run_simulation(self):
         self.run_flag = True

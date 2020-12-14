@@ -94,3 +94,11 @@ class MainGraph(object):
                 pen=pg.mkPen('g', width=self.width_plot), name="torque_t_b(Z)[Nm]")
         p7.showGrid(x=True, y=True)
         p7.setLabel('bottom', "Time [s]")
+
+    def plot_aux(self):
+        p1 = self.win.addPlot(title="Groundtrack")
+        p1.plot(rad2deg * self.datalog.basic_datalog['lon[rad]'],
+                rad2deg * self.datalog.basic_datalog['lat[rad]'], pen=pg.mkPen('r', width=self.width_plot))
+        p1.showGrid(x=True, y=True)
+        p1.setLabel('left', "Latitude [deg]")
+        p1.setLabel('bottom', "Longitude [deg]")
