@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan 16 02:47:18 2020
-
-@author: EO
+@author: Elias Obreque
+@Date: 11/13/2020 9:25 PM
+els.obrq@gmail.com
 """
 import sys
 from PyQt5.Qt import *
@@ -20,9 +20,8 @@ from Graphics import MainGraph
 from DataHandler import DataHandler
 from pyquaternion import Quaternion
 from forms.main_screen_2 import Ui_MainWindow
-from pyvista.utilities import translate
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import (FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+from matplotlib.backends.backend_qt5agg import FigureCanvas
 from matplotlib.figure import Figure
 
 

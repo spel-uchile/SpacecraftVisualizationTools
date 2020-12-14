@@ -1,3 +1,8 @@
+"""
+@author: Elias Obreque
+@Date: 11/13/2020 9:25 PM
+els.obrq@gmail.com
+"""
 
 import numpy as np
 basic_datalog_keys = [['time[sec]'],
