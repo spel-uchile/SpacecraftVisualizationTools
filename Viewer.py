@@ -13,20 +13,22 @@ from threading import Thread
 import time
 import numpy as np
 import pyvista as pv
-from ElementsDefinition import GeoDef
+from pyvistaqt import QtInteractor
+from GeometricElements import GeometricElements
 import pandas as pd
 from Graphics import MainGraph
-from datalogcsv import DataHandler
+from DataHandler import DataHandler
 from pyquaternion import Quaternion
 from forms.main_screen_ui import Ui_MainWindow
 from pyvista.utilities import translate
 
 
-class Viewer(GeoDef, QtWidgets.QMainWindow):
+class Viewer(GeometricElements, QtWidgets.QMainWindow):
 
-    def __init__(self, parent=None, show=True):
+    def __init__(self, datalog=None, parent=None, show=True):
         self.time_speed = 1
-        self.earth_av = 7.2921150*360.0*1e-5/(2*np.pi)
+        self.earth_av = 7.2921150 * 360.0 * 1e-5 / (2 * np.pi)
+        self.init_sideral = 0
         self.run_flag = False
         self.pause_flag = False
         self.stop_flag = False
@@ -34,27 +36,30 @@ class Viewer(GeoDef, QtWidgets.QMainWindow):
         self.countTime = 0
         self.screen = None
         self.simulation_index = -1
-
+        self.q_t_i2b = None
+        self.spacecraft_pos_i = None
+        self.datalog = datalog
+        self.data_handler = None
         QMainWindow.__init__(self, parent)
         self.window = Ui_MainWindow()
         self.window.setupUi(self)
+        self.quaternion_t0 = None
 
         # Set-up signals and slots
         # self.window.actionGeneratePlot.triggered.connect(self.plot_slot)
         # self.window.control_spinbox.valueChanged.connect(self.window.control_slider.setValue)
         # self.window.control_slider.valueChanged.connect(self.window.control_spinbox.setValue)
 
-
         #########################################
 
         vlayout = QVBoxLayout()
         self.window.view_frame.setLayout(vlayout)
 
-        self.vtk_widget = pv.QtInteractor(self.window.view_frame, shape=(1, 2))
+        self.vtk_widget = QtInteractor(self.window.view_frame, shape=(1, 2))
         self.vtk_widget.set_background([0.25, 0.25, 0.25])
         vlayout.addWidget(self.vtk_widget)
 
-        GeoDef.__init__(self, self.vtk_widget)
+        GeometricElements.__init__(self, self.vtk_widget)
 
         self.add_bar()
         self.add_i_frame_attitude()
@@ -65,6 +70,8 @@ class Viewer(GeoDef, QtWidgets.QMainWindow):
         # --------------------------------------------------------------------------------------------------------------
         # File option
         self.window.actionLoadCsv.triggered.connect(self.load_csv_file)
+        if datalog is not None:
+            self.load_csv_file()
         # --------------------------------------------------------------------------------------------------------------
         # Path Orbit option
         # aries_action = QAction('Add vector to Vernal Equinox', self)
@@ -101,7 +108,7 @@ class Viewer(GeoDef, QtWidgets.QMainWindow):
         # --------------------------------------------------------------------------------------------------------------
 
     def add_graph2d(self):
-        self.screen = MainGraph(self.datalog)
+        self.screen = MainGraph(self.data_handler)
         self.screen.win.show()
 
     def load_csv_file(self):
@@ -110,27 +117,35 @@ class Viewer(GeoDef, QtWidgets.QMainWindow):
             sim_data = df
             return sim_data
 
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        filename, _ = QFileDialog.getOpenFileName(self, "Select CSV data file", "", "CSV Files (*.csv)",
-                                                  options=options)
-        if filename:
-            data_log = read_data(filename)
-            self.datalog = DataHandler(data_log)
-            self.datalog.create_variable()
+        if self.datalog is None:
+            options = QFileDialog.Options()
+            options |= QFileDialog.DontUseNativeDialog
+            filename, _ = QFileDialog.getOpenFileName(self, "Select CSV data file", "", "CSV Files (*.csv)",
+                                                      options=options)
+            if filename:
+                self.datalog = read_data(filename)
+                print('Data log loaded')
+            else:
+                print('Could not load data log')
 
-            # Add actors to orbit view
-            self.add_orbit()
-            self.add_spacecraft_2_orbit()
-            self.add_aries_arrow()
+        self.data_handler = DataHandler(self.datalog)
+        self.data_handler.create_variable()
 
-            # Add actors to attitude view
-            self.add_spacecraft_2_attitude()
-            self.add_b_frame_attitude(show_nadir=True)
+        # Add actors to orbit view
+        self.spacecraft_pos_i = np.array([self.data_handler.basic_datalog[self.data_handler.basic_datalog_keys[2][0]],
+                                          self.data_handler.basic_datalog[self.data_handler.basic_datalog_keys[2][1]],
+                                          self.data_handler.basic_datalog[self.data_handler.basic_datalog_keys[2][2]]]).transpose()
+        self.add_orbit(self.spacecraft_pos_i)
+        self.add_spacecraft_2_orbit(self.spacecraft_pos_i[0, :])
+        # self.add_aries_arrow()
 
-            print('Data log created')
-        else:
-            print('Could not create data log')
+        # Add actors to attitude view
+        self.q_t_i2b = np.array([self.data_handler.basic_datalog[self.data_handler.basic_datalog_keys[4][0]],
+                                 self.data_handler.basic_datalog[self.data_handler.basic_datalog_keys[4][1]],
+                                 self.data_handler.basic_datalog[self.data_handler.basic_datalog_keys[4][2]],
+                                 self.data_handler.basic_datalog[self.data_handler.basic_datalog_keys[4][3]]]).transpose()
+        self.add_spacecraft_2_attitude(self.q_t_i2b)
+        self.add_b_frame_attitude(show_nadir=False)
 
     def run_simulation(self):
         self.run_flag = True
@@ -157,19 +172,20 @@ class Viewer(GeoDef, QtWidgets.QMainWindow):
         self.simulation_index = 1
 
     def update_time(self):
-        self.countTime += self.datalog.stepTime
+        self.countTime += self.data_handler.stepTime
 
     def update_meshes(self, index):
         # Update Earth
-        self.sphere.rotate_z(10)
+        sideral = self.init_sideral + self.earth_av * self.data_handler.stepTime
+        self.sphere.rotate_z(sideral)
 
         if index == 0:
-            print('Reseting')
+            print('Resetting')
 
         # Update Orbit
-        tr_vector = self.datalog.sat_pos_i[index, :] - self.datalog.sat_pos_i[index - 1, :] if index != 0 \
-            else  self.datalog.sat_pos_i[0, :] - self.spacecraft_in_orbit.center_of_mass()
-        self.spacecraft_in_orbit.translate(tr_vector)
+        tr_vector = self.spacecraft_pos_i[index, :] - self.spacecraft_pos_i[index - 1, :] if index != 0 \
+            else self.spacecraft_pos_i[0, :] - self.spacecraft_model_2_orbit.center_of_mass()
+        self.spacecraft_model_2_orbit.translate(tr_vector)
 
         # Update Attitude
         self.update_attitude(index)
@@ -180,9 +196,9 @@ class Viewer(GeoDef, QtWidgets.QMainWindow):
     def rotate_th(self):
         self.vtk_widget.subplot(0, 0)
         self.reset_time()
-        while not self.stop_flag and self.countTime < self.datalog.endTime:
+        while not self.stop_flag and self.countTime < self.data_handler.endTime:
             self.update_meshes(self.simulation_index)
-            time.sleep(self.datalog.stepTime / self.time_speed)
+            time.sleep(self.data_handler.stepTime / self.time_speed)
 
             # Update time
             self.update_time()
@@ -206,15 +222,15 @@ class Viewer(GeoDef, QtWidgets.QMainWindow):
         return
 
     def update_attitude(self, n):
-        quaternion_tn = Quaternion(self.datalog.q_t_i2b[n, :]).unit
+        quaternion_tn = Quaternion(self.q_t_i2b[n, :]).unit
         inv_quaternion = self.quaternion_t0.inverse
-        d_quaternion = quaternion_tn*inv_quaternion
+        d_quaternion = quaternion_tn * inv_quaternion
 
-        KMatrix = d_quaternion.transformation_matrix
-        self.body_x.transform(KMatrix)
-        self.body_y.transform(KMatrix)
-        self.body_z.transform(KMatrix)
-        self.spacecraft_in_attitude.transform(KMatrix)
+        k_matrix = d_quaternion.transformation_matrix
+        self.body_x.transform(k_matrix)
+        self.body_y.transform(k_matrix)
+        self.body_z.transform(k_matrix)
+        self.spacecraft_model_2_attitude.transform(k_matrix)
         # q0 = self.quaternion_t0
         # prev_vector = self.prev_vector
         self.quaternion_t0 = quaternion_tn
@@ -223,7 +239,7 @@ class Viewer(GeoDef, QtWidgets.QMainWindow):
         # print('z pointing: ', quaternion_tn.rotate([0,0,1]))
         # print('------------------------')
 
-        #nadir
+        # nadir
         if self.show_nadir:
             nadir_tn_i = self.datalog.sat_pos_i[n, :]
             nadir_tn_i = - nadir_tn_i / np.linalg.norm(nadir_tn_i)
@@ -246,7 +262,6 @@ class Viewer(GeoDef, QtWidgets.QMainWindow):
             # self.body_control_torque.transform(Quaternion(axis=vec, angle=ang).transformation_matrix)
             # self.ct0 = tar_v
             # translate(self.control_torque, [0,0,0], self.datalog.control_torque[n, :])
-
 
 
 if __name__ == '__main__':

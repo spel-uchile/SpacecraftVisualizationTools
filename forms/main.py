@@ -8,6 +8,7 @@ from PyQt5 import QtCore
 
 from main_screen_ui import Ui_MainWindow
 
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         # Set-up window
