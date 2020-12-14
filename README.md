@@ -1,6 +1,6 @@
 # SpacecraftVisualizationTools
 
-This tool was designed to visualize * .CSV data obtained from the spacecraft simulator.
+This tool was designed to visualize * .CSV data obtained from the spacecraft simulator [Here](https://github.com/spel-uchile/SpacecraftSimulator).
 
 
 ### Required Libraries
@@ -12,6 +12,10 @@ This tool was designed to visualize * .CSV data obtained from the spacecraft sim
  - pyquaternion
  - pyqtgraph
  - pyvista
+ 
+### Installation
+
+pip install -r requirements.txt
  
 ***Contact***
 

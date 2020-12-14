@@ -1,0 +1,10 @@
+requests~=2.24.0
+numpy~=1.18.5
+tqdm~=4.47.0
+matplotlib~=3.2.2
+pandas~=1.0.5
+pyvista~=0.27.4
+pyqt5~=5.15.2
+pyvistaqt~=0.2.0
+pyquaternion~=0.9.9
+pyqtgraph~=0.11.0
