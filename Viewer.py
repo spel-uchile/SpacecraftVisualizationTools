@@ -78,6 +78,7 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         GeometricElements.__init__(self, self.vtk_widget)
         self.add_bar()
         self.add_i_frame_attitude()
+        self.add_gs_item()
 
         # --------------------------------------------------------------------------------------------------------------
         # simple menu to functions
@@ -351,8 +352,14 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
                                           self.data_handler.auxiliary_datalog['Vector_tar_i(Z) [-]'][n]])
 
             vec = np.cross(self.vector_point, curr_vector_point)
-            ang = np.arccos(np.dot(self.vector_point, curr_vector_point))
-            if ang == 0:
+            arg = np.dot(self.vector_point, curr_vector_point)
+            if arg > 1.0:
+                arg = 1.0
+            elif arg < -1.0:
+                arg = -1.0
+
+            ang = np.arccos(arg)
+            if np.linalg.norm(vec) == 0:
                 vec = np.array([0, 0, 1])
             self.body_ref_point.transform(Quaternion(axis=vec, angle=ang).transformation_matrix)
             self.vector_point = curr_vector_point

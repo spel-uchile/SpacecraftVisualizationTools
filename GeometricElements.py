@@ -95,7 +95,7 @@ class GeometricElements(object):
     def add_spacecraft_2_attitude(self, q_t_i2b):
         self.vtk_widget.subplot(0, 1)
         self.spacecraft_model_2_attitude = pv.PolyData('./Model/PlantSat/PlantSat.stl')
-        self.vtk_widget.add_mesh(self.spacecraft_model_2_attitude, opacity=0.1)
+        self.vtk_widget.add_mesh(self.spacecraft_model_2_attitude, opacity=0.5)
         self.spacecraft_model_2_attitude.translate(-np.array([0, 0, 34/2]))
         self.quaternion_t0 = Quaternion(q_t_i2b[0, :])
         self.KMatrix = self.quaternion_t0.transformation_matrix
