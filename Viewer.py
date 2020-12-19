@@ -40,6 +40,7 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         self.run_flag = False
         self.pause_flag = False
         self.stop_flag = False
+        self.gs_flag = False
         self.thread = None
         self.countTime = 0
         self.screen = None
@@ -91,6 +92,7 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         self.window.actionRun.triggered.connect(self.run_simulation)
         self.window.actionPause.triggered.connect(self.pause_simulation)
         self.window.actionStop.triggered.connect(self.stop_simulation)
+        self.window.actionAddGS.triggered.connect(self.add_gs_item)
 
         # sim_menu.addAction(run_action)
         # sim_menu.addAction(pause_action)
@@ -208,6 +210,8 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         init_jd = self.jday(datetime_array.year, datetime_array.month, datetime_array.day,
                             datetime_array.hour, datetime_array.minute, datetime_array.second)
         self.sphere.rotate_z(rad2deg * self.gstime(init_jd))
+        if self.gs_flag:
+            self.update_gs_location(rad2deg * self.gstime(init_jd))
         self.vector_point = np.array([self.data_handler.auxiliary_datalog['Vector_tar_i(X) [-]'][0],
                                       self.data_handler.auxiliary_datalog['Vector_tar_i(Y) [-]'][0],
                                       self.data_handler.auxiliary_datalog['Vector_tar_i(Z) [-]'][0]])
@@ -249,6 +253,8 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         # Update Earth
         sideral = self.earth_av * self.data_handler.stepTime
         self.sphere.rotate_z(sideral)
+        if self.gs_flag:
+            self.update_gs_location(sideral)
 
         if index == 0:
             print('Resetting')
@@ -320,6 +326,10 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         cells[:, 1] = np.arange(0, len(new_points) - 1, dtype=np.int)
         cells[:, 2] = np.arange(1, len(new_points), dtype=np.int)
         self.vector_line_from_sc.lines = cells
+
+    def update_gs_location(self, sideral):
+        self.tar_pos_eci.rotate_z(sideral)
+        return
 
     def update_attitude(self, n, sc_model1, sc_model2=None):
         quaternion_tn = Quaternion(self.q_t_i2b[n, :]).unit

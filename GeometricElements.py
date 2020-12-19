@@ -2,12 +2,18 @@
 @author: Elias Obreque
 @Date: 11/13/2020 9:25 PM
 els.obrq@gmail.com
+
+Dimension in meter
 """
 
 from pyvista import examples
 import numpy as np
 import pyvista as pv
 from pyquaternion import Quaternion
+twopi = 2.0 * np.pi
+deg2rad = np.pi / 180.0
+rad2deg = 1 / deg2rad
+radiusearthkm = 6378.135e3  # m
 
 
 class GeometricElements(object):
@@ -32,7 +38,8 @@ class GeometricElements(object):
         self.add_eci_frame()
         self.vtk_widget.view_isometric()
         self.body_ref_point = None
-
+        self.vector_line_from_sc = None
+        self.tar_pos_eci = None
         # self.vtk_widget.reset_camera()
 
     def add_orbit(self, sat_pos_i):
@@ -65,6 +72,19 @@ class GeometricElements(object):
         self.body_x_i.translate(sat_pos_i_0)
         self.body_y_i.translate(sat_pos_i_0)
         self.body_z_i.translate(sat_pos_i_0)
+
+    def add_gs_item(self):
+        # Target: Antenna Santiago
+        tar_alt = 572  # m
+        tar_long = -70.6506  # degree
+        tar_lat = -33.4372  # degree
+        # Geodetic to ECEF
+        tar_pos_ecef = self.geodetic_to_ecef(tar_alt  * 1e-3, tar_long * deg2rad, tar_lat * deg2rad) * 1e3
+        self.tar_pos_eci = pv.Sphere(radius=8e4, center=tar_pos_ecef)
+        self.vtk_widget.subplot(0, 0)
+        self.vtk_widget.add_mesh(self.tar_pos_eci, color='r')
+        self.gs_flag = True
+        return
 
     def add_vector_line_in_orbit(self, center_point, vector_point):
         self.vtk_widget.subplot(0, 0)
@@ -124,4 +144,15 @@ class GeometricElements(object):
         self.vtk_widget.add_lines(np.array([[0, 0, 0], [1e7, 0, 0]]), color=[50, 0, 0], width=2, label='X-axis')
         self.vtk_widget.add_lines(np.array([[0, 0, 0], [0, 1e7, 0]]), color=[0, 50, 0], width=2, label='Y-axis')
         self.vtk_widget.add_lines(np.array([[0, 0, 0], [0, 0, 1e7]]), color=[0, 0, 50], width=2, label='Z-axis')
+
+    def geodetic_to_ecef(self, tar_alt, tar_long, tar_lat):
+        a2 = 40680631.6  # Equatorial radius
+        b2 = 40408296.0  # Polar radius
+        a2cos2 = a2 * np.cos(tar_lat) ** 2
+        b2sin2 = b2 * np.sin(tar_lat) ** 2
+        N = a2 / np.sqrt(a2cos2 + b2sin2)
+        x = (N + tar_alt) * np.cos(tar_lat) * np.cos(tar_long)
+        y = (N + tar_alt) * np.cos(tar_lat) * np.sin(tar_long)
+        z = (N * b2 / a2 + tar_alt) * np.sin(tar_lat)
+        return np.array([x, y, z])
 
