@@ -22,6 +22,11 @@ from forms.main_screen_2 import Ui_MainWindow
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvas
 from matplotlib.figure import Figure
+from datetime import datetime
+
+twopi = 2.0 * np.pi
+deg2rad = np.pi / 180.0
+rad2deg = 1 / deg2rad
 
 
 class Viewer(GeometricElements, QtWidgets.QMainWindow):
@@ -30,6 +35,8 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         self.time_speed = 1
         self.earth_av = 7.2921150 * 360.0 * 1e-5 / (2 * np.pi)
         self.init_sideral = 0
+        self.vector_point = np.zeros(3)
+        self.show_ref_vector_point = False
         self.run_flag = False
         self.pause_flag = False
         self.stop_flag = False
@@ -80,28 +87,6 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         if datalog is not None:
             self.load_csv_file()
         # --------------------------------------------------------------------------------------------------------------
-        # Path Orbit option
-        # aries_action = QAction('Add vector to Vernal Equinox', self)
-
-        # orb_menu.addAction(orbit_action)
-        # orb_menu.addAction(cad_action)
-        # orb_menu.addAction(aries_action)
-        # --------------------------------------------------------------------------------------------------------------
-        # Attitude
-        # AttMenu         = main_menu.addMenu('Attitude')
-        # sat_action      = QAction('Add satellite', self)
-        # frame_action    = QAction('Add Body reference frame', self)
-
-        # sat_action.triggered.connect(self.add_spacecraft_2_attitude)
-        # frame_action.triggered.connect(self.add_b_frame_attitude)
-        # AttMenu.addAction(sat_action)
-        # AttMenu.addAction(frame_action)
-        # --------------------------------------------------------------------------------------------------------------
-        # Simulation option
-        # sim_menu = main_menu.addMenu('Simulation')
-        # run_action = QAction('Run', self)
-        # pause_action = QAction('Pause', self)
-        # stop_action = QAction('Stop', self)
 
         self.window.actionRun.triggered.connect(self.run_simulation)
         self.window.actionPause.triggered.connect(self.pause_simulation)
@@ -121,11 +106,18 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         is_data = False
         self.plot_canvas.grid()
         self.plot_canvas.set_xlabel('Time [s]')
+        flat_basic_list = [item for sublist in self.data_handler.basic_datalog_keys[1:] for item in sublist]
+        len_aux_keys = len(self.data_handler.auxiliary_datalog_keys)
         for index in range(self.window.listWidget.count()):
             if self.window.listWidget.item(index).checkState() == Qt.Checked:
-                elem = self.data_handler.auxiliary_datalog_keys[index]
-                self.plot_canvas.plot(self.data_handler.basic_datalog['time[sec]'],
-                                      self.data_handler.auxiliary_datalog[elem], label=elem)
+                if index < len_aux_keys:
+                    elem = self.data_handler.auxiliary_datalog_keys[index]
+                    self.plot_canvas.plot(self.data_handler.basic_datalog['time[sec]'],
+                                          self.data_handler.auxiliary_datalog[elem], label=elem)
+                else:
+                    elem = flat_basic_list[index - len_aux_keys]
+                    self.plot_canvas.plot(self.data_handler.basic_datalog['time[sec]'],
+                                          self.data_handler.basic_datalog[elem], label=elem)
                 is_data = True
         if is_data:
             self.plot_canvas.legend()
@@ -137,11 +129,18 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         plt.figure()
         plt.grid()
         plt.xlabel('Time [s]')
+        flat_basic_list = [item for sublist in self.data_handler.basic_datalog_keys[1:] for item in sublist]
+        len_aux_keys = len(self.data_handler.auxiliary_datalog_keys)
         for index in range(self.window.listWidget.count()):
             if self.window.listWidget.item(index).checkState() == Qt.Checked:
-                elem = self.data_handler.auxiliary_datalog_keys[index]
-                plt.plot(self.data_handler.basic_datalog['time[sec]'],
-                         self.data_handler.auxiliary_datalog[elem], label=elem)
+                if index < len_aux_keys:
+                    elem = self.data_handler.auxiliary_datalog_keys[index]
+                    plt.plot(self.data_handler.basic_datalog['time[sec]'],
+                             self.data_handler.auxiliary_datalog[elem], label=elem)
+                else:
+                    elem = flat_basic_list[index - len_aux_keys]
+                    plt.plot(self.data_handler.basic_datalog['time[sec]'],
+                             self.data_handler.basic_datalog[elem], label=elem)
         plt.legend()
         plt.show()
         return
@@ -149,6 +148,13 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
     def add_item_to_list(self):
         _translate = QtCore.QCoreApplication.translate
         for elem in self.data_handler.auxiliary_datalog_keys:
+            item = QtWidgets.QListWidgetItem()
+            item.setCheckState(QtCore.Qt.Unchecked)
+            item.setText(_translate("MainWindow", elem))
+            self.window.listWidget.addItem(item)
+
+        flat_basic_list = [item for sublist in self.data_handler.basic_datalog_keys[1:] for item in sublist]
+        for elem in flat_basic_list:
             item = QtWidgets.QListWidgetItem()
             item.setCheckState(QtCore.Qt.Unchecked)
             item.setText(_translate("MainWindow", elem))
@@ -165,16 +171,17 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
             sim_data = df
             return sim_data
 
-        if self.datalog is None:
-            options = QFileDialog.Options()
-            options |= QFileDialog.DontUseNativeDialog
-            filename, _ = QFileDialog.getOpenFileName(self, "Select CSV data file", "", "CSV Files (*.csv)",
-                                                      options=options)
-            if filename:
-                self.datalog = read_data(filename)
-                print('Data log loaded')
-            else:
-                print('Could not load data log')
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        filename, _ = QFileDialog.getOpenFileName(self, "Select CSV data file", "", "CSV Files (*.csv)",
+                                                  options=options)
+        if filename:
+            if self.datalog is not None:
+                self.window.listWidget.clear()
+            self.datalog = read_data(filename)
+            print('Data log loaded')
+        else:
+            print('Could not load data log')
 
         self.data_handler = DataHandler(self.datalog)
         self.data_handler.create_variable()
@@ -182,18 +189,33 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         # Add actors to orbit view
         self.spacecraft_pos_i = np.array([self.data_handler.basic_datalog[self.data_handler.basic_datalog_keys[2][0]],
                                           self.data_handler.basic_datalog[self.data_handler.basic_datalog_keys[2][1]],
-                                          self.data_handler.basic_datalog[self.data_handler.basic_datalog_keys[2][2]]]).transpose()
+                                          self.data_handler.basic_datalog[
+                                              self.data_handler.basic_datalog_keys[2][2]]]).transpose()
         self.add_orbit(self.spacecraft_pos_i)
-        self.add_spacecraft_2_orbit(self.spacecraft_pos_i[0, :])
         # self.add_aries_arrow()
 
         # Add actors to attitude view
         self.q_t_i2b = np.array([self.data_handler.basic_datalog[self.data_handler.basic_datalog_keys[4][0]],
                                  self.data_handler.basic_datalog[self.data_handler.basic_datalog_keys[4][1]],
                                  self.data_handler.basic_datalog[self.data_handler.basic_datalog_keys[4][2]],
-                                 self.data_handler.basic_datalog[self.data_handler.basic_datalog_keys[4][3]]]).transpose()
+                                 self.data_handler.basic_datalog[
+                                     self.data_handler.basic_datalog_keys[4][3]]]).transpose()
+
+        self.add_spacecraft_2_orbit(self.spacecraft_pos_i[0, :], self.q_t_i2b)
         self.add_spacecraft_2_attitude(self.q_t_i2b)
-        self.add_b_frame_attitude(show_nadir=False)
+        init_time = self.data_handler.auxiliary_datalog['Date time'][0]
+        datetime_array = datetime.strptime(init_time, '%Y-%m-%d %H:%M:%S')
+        init_jd = self.jday(datetime_array.year, datetime_array.month, datetime_array.day,
+                            datetime_array.hour, datetime_array.minute, datetime_array.second)
+        self.sphere.rotate_z(rad2deg * self.gstime(init_jd))
+        self.vector_point = np.array([self.data_handler.auxiliary_datalog['Vector_tar_i(X) [-]'][0],
+                                      self.data_handler.auxiliary_datalog['Vector_tar_i(Y) [-]'][0],
+                                      self.data_handler.auxiliary_datalog['Vector_tar_i(Z) [-]'][0]])
+        if np.linalg.norm(self.vector_point) != 0:
+            self.show_ref_vector_point = True
+            self.add_vector_line_in_orbit(self.spacecraft_pos_i[0, :], self.vector_point)
+        self.add_b_frame_attitude(show_ref_vector_point=self.show_ref_vector_point,
+                                  vector_point=self.vector_point)
         self.add_item_to_list()
 
     def run_simulation(self):
@@ -225,7 +247,7 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
 
     def update_meshes(self, index):
         # Update Earth
-        sideral = self.init_sideral + self.earth_av * self.data_handler.stepTime
+        sideral = self.earth_av * self.data_handler.stepTime
         self.sphere.rotate_z(sideral)
 
         if index == 0:
@@ -233,12 +255,32 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
 
         # Update Orbit
         tr_vector = self.spacecraft_pos_i[index, :] - self.spacecraft_pos_i[index - 1, :] if index != 0 \
-            else self.spacecraft_pos_i[0, :] - self.spacecraft_model_2_orbit.center_of_mass()
+            else self.spacecraft_pos_i[0, :] - np.array([0, 0, 34e-1/2])
+
+        self.vector_point = np.array([self.data_handler.auxiliary_datalog['Vector_tar_i(X) [-]'][index],
+                                      self.data_handler.auxiliary_datalog['Vector_tar_i(Y) [-]'][index],
+                                      self.data_handler.auxiliary_datalog['Vector_tar_i(Z) [-]'][index]])
+        if index != 0:
+            self.vector_point = np.array([self.data_handler.auxiliary_datalog['Vector_tar_i(X) [-]'][index],
+                                          self.data_handler.auxiliary_datalog['Vector_tar_i(Y) [-]'][index],
+                                          self.data_handler.auxiliary_datalog['Vector_tar_i(Z) [-]'][index]])
+
+            self.spacecraft_model_2_orbit.translate(-self.spacecraft_pos_i[index - 1, :])
+            self.update_attitude(index, self.spacecraft_model_2_attitude, self.spacecraft_model_2_orbit)
+            self.spacecraft_model_2_orbit.translate(self.spacecraft_pos_i[index - 1, :])
+            if self.show_ref_vector_point:
+                self.update_vector_line(self.spacecraft_pos_i[index - 1, :], self.vector_point)
+        else:
+            self.spacecraft_model_2_orbit.translate(-self.spacecraft_model_2_orbit.center_of_mass())
+            self.update_attitude(index, self.spacecraft_model_2_attitude, self.spacecraft_model_2_orbit)
+            self.spacecraft_model_2_orbit.translate(self.spacecraft_model_2_orbit.center_of_mass())
+            if self.show_ref_vector_point:
+                self.update_vector_line(self.spacecraft_pos_i[index, :], self.vector_point)
+
         self.spacecraft_model_2_orbit.translate(tr_vector)
-
-        # Update Attitude
-        self.update_attitude(index)
-
+        self.body_x_i.translate(tr_vector)
+        self.body_y_i.translate(tr_vector)
+        self.body_z_i.translate(tr_vector)
         # Update widget
         self.vtk_widget.update()
 
@@ -270,7 +312,16 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         self.time_speed = value
         return
 
-    def update_attitude(self, n):
+    def update_vector_line(self, center_point, vector_point):
+        self.vtk_widget.subplot(0, 0)
+        new_points = np.array([center_point, center_point + 1e7 * vector_point])
+        self.vector_line_from_sc.points = new_points
+        cells = np.full((len(new_points) - 1, 3), 2, dtype=np.int)
+        cells[:, 1] = np.arange(0, len(new_points) - 1, dtype=np.int)
+        cells[:, 2] = np.arange(1, len(new_points), dtype=np.int)
+        self.vector_line_from_sc.lines = cells
+
+    def update_attitude(self, n, sc_model1, sc_model2=None):
         quaternion_tn = Quaternion(self.q_t_i2b[n, :]).unit
         inv_quaternion = self.quaternion_t0.inverse
         d_quaternion = quaternion_tn * inv_quaternion
@@ -279,38 +330,42 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         self.body_x.transform(k_matrix)
         self.body_y.transform(k_matrix)
         self.body_z.transform(k_matrix)
-        self.spacecraft_model_2_attitude.transform(k_matrix)
-        # q0 = self.quaternion_t0
-        # prev_vector = self.prev_vector
+        sc_model1.transform(k_matrix)
+        if sc_model2 is not None:
+            sc_model2.transform(k_matrix)
         self.quaternion_t0 = quaternion_tn
-        # self.prev_vector = d_quaternion.rotate(self.prev_vector)
-        # print('vector:', self.prev_vector)
-        # print('z pointing: ', quaternion_tn.rotate([0,0,1]))
-        # print('------------------------')
 
-        # nadir
-        if self.show_nadir:
-            nadir_tn_i = self.datalog.sat_pos_i[n, :]
-            nadir_tn_i = - nadir_tn_i / np.linalg.norm(nadir_tn_i)
-            # nadir_tn_b = quaternion_tn.rotate(nadir_tn_i)
-            # nadir_tn_b = self.datalog.nadir_t_b[n, :]
-            tar_v = nadir_tn_i
-            print(tar_v)
+        if self.show_ref_vector_point:
+            curr_vector_point = np.array([self.data_handler.auxiliary_datalog['Vector_tar_i(X) [-]'][n],
+                                          self.data_handler.auxiliary_datalog['Vector_tar_i(Y) [-]'][n],
+                                          self.data_handler.auxiliary_datalog['Vector_tar_i(Z) [-]'][n]])
 
-            vec = np.cross(self.nadir_0, tar_v)
-            ang = np.arccos(np.dot(self.nadir_0, tar_v))
-            self.body_nadir.transform(Quaternion(axis=vec, angle=ang).transformation_matrix)
-            self.nadir_0 = tar_v
+            vec = np.cross(self.vector_point, curr_vector_point)
+            ang = np.arccos(np.dot(self.vector_point, curr_vector_point))
+            if ang == 0:
+                vec = np.array([0, 0, 1])
+            self.body_ref_point.transform(Quaternion(axis=vec, angle=ang).transformation_matrix)
+            self.vector_point = curr_vector_point
 
-            # ct_v = self.datalog.control_torque[n, :]
-            # ct_v = ct_v/ np.linalg.norm(ct_v)
-            # tar_v = ct_v
-            #
-            # vec = np.cross(self.ct0, tar_v)
-            # ang = np.arccos(np.dot(self.ct0, tar_v))
-            # self.body_control_torque.transform(Quaternion(axis=vec, angle=ang).transformation_matrix)
-            # self.ct0 = tar_v
-            # translate(self.control_torque, [0,0,0], self.datalog.control_torque[n, :])
+    def gstime(self, jdut1):
+        tut1 = (jdut1 - 2451545.0) / 36525.0
+        temp = -6.2e-6 * tut1 * tut1 * tut1 + 0.093104 * tut1 * tut1 + \
+               (876600.0 * 3600 + 8640184.812866) * tut1 + 67310.54841  # sec
+        temp = (temp * deg2rad / 240.0) % twopi  # 360/86400 = 1/240, to deg, to rad
+
+        #  ------------------------ check quadrants ---------------------
+        if temp < 0.0:
+            temp += twopi
+        return temp
+
+    def jday(self, year, mon, day, hr, minute, sec):
+        return (367.0 * year -
+                7.0 * (year + ((mon + 9.0) // 12.0)) * 0.25 // 1.0 +
+                275.0 * mon // 9.0 +
+                day + 1721013.5 +
+                ((sec / 60.0 + minute) / 60.0 + hr) / 24.0  # ut in days
+                #  - 0.5*sgn(100.0*year + mon - 190002.5) + 0.5;
+                )
 
 
 if __name__ == '__main__':
