@@ -88,7 +88,7 @@ class GeometricElements(object):
 
     def add_vector_line_in_orbit(self, center_point, vector_point):
         self.vtk_widget.subplot(0, 0)
-        self.vector_line_from_sc = pv.lines_from_points(np.array([center_point, center_point + 1e7*vector_point]))
+        self.vector_line_from_sc = pv.lines_from_points(np.array([center_point, center_point + 1e7 * vector_point]))
         self.vtk_widget.add_mesh(self.vector_line_from_sc, color='w')
         return
 
@@ -134,7 +134,7 @@ class GeometricElements(object):
 
     def add_bar(self):
         self.vtk_widget.subplot(0, 0)
-        self.vtk_widget.add_slider_widget(self.sim_speed, [0.5, 1000], value=1, title='Simulation speed')
+        self.vtk_widget.add_slider_widget(self.sim_speed, [1, 100], value=2, title='Simulation speed')
 
     def sim_speed(self, value):
         return
