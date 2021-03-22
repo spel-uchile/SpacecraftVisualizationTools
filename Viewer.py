@@ -177,9 +177,11 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
             self.sphere.rotate_z(self.init_sideral)
             if self.gs_flag:
                 self.update_gs_location(rad2deg * self.gstime(init_jd))
-            self.vector_point = np.array([self.data_handler.auxiliary_datalog['Vector_tar_i(X) [-]'][0],
-                                          self.data_handler.auxiliary_datalog['Vector_tar_i(Y) [-]'][0],
-                                          self.data_handler.auxiliary_datalog['Vector_tar_i(Z) [-]'][0]])
+
+            if 'Vector_tar_i(X) [-]' in self.data_handler.auxiliary_datalog.keys():
+                self.vector_point = np.array([self.data_handler.auxiliary_datalog['Vector_tar_i(X) [-]'][0],
+                                              self.data_handler.auxiliary_datalog['Vector_tar_i(Y) [-]'][0],
+                                              self.data_handler.auxiliary_datalog['Vector_tar_i(Z) [-]'][0]])
             if np.linalg.norm(self.vector_point) != 0:
                 self.show_ref_vector_point = True
                 self.add_vector_line_in_orbit(self.spacecraft_pos_i[0, :], self.vector_point)
