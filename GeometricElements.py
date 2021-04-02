@@ -28,7 +28,7 @@ class GeometricElements(object):
         # add a sphere to the pyqt frame
         self.vtk_widget.subplot(0, 0)
         sphere = examples.load_globe()
-        sphere.points /= 1000
+        # sphere.points /= 1000
         # self.vtk_widget.add_background_image(examples.mapfile)
         self.vtk_widget.add_background_image("Model/background4.jpg")
         self.vtk_widget.set_background(color='k')

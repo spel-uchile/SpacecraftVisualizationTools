@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvas
 from matplotlib.figure import Figure
 from datetime import datetime
+from forms.initial_date_ui import InitDateForm
 
 twopi = 2.0 * np.pi
 deg2rad = np.pi / 180.0
@@ -169,7 +170,16 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
 
             self.add_spacecraft_2_orbit(self.spacecraft_pos_i[0, :], self.q_t_i2b)
             self.add_spacecraft_2_attitude(self.q_t_i2b)
-            init_time = self.data_handler.auxiliary_datalog['Date time'][0]
+
+            try:
+                date_time_data = self.data_handler.auxiliary_datalog['Date time']
+                init_time = date_time_data[0]
+            except KeyError:
+                dp = InitDateForm()
+                # self.vtk_widget.setWindowModality(QtCore.Qt.ApplicationModal)
+                dp.exec()
+                print(dp.current_date)
+
             datetime_array = datetime.strptime(init_time, '%Y-%m-%d %H:%M:%S')
             init_jd = self.jday(datetime_array.year, datetime_array.month, datetime_array.day,
                                 datetime_array.hour, datetime_array.minute, datetime_array.second)
