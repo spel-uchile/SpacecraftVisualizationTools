@@ -174,13 +174,16 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
             try:
                 date_time_data = self.data_handler.auxiliary_datalog['Date time']
                 init_time = date_time_data[0]
+                datetime_array = datetime.strptime(init_time, '%Y-%m-%d %H:%M:%S')
+
             except KeyError:
                 dp = InitDateForm()
                 # self.vtk_widget.setWindowModality(QtCore.Qt.ApplicationModal)
                 dp.exec()
                 print(dp.current_date)
+                init_time = dp.current_date.toUTC().toString(Qt.ISODate)
+                datetime_array = datetime.strptime(init_time, '%Y-%m-%dT%H:%M:%SZ')
 
-            datetime_array = datetime.strptime(init_time, '%Y-%m-%d %H:%M:%S')
             init_jd = self.jday(datetime_array.year, datetime_array.month, datetime_array.day,
                                 datetime_array.hour, datetime_array.minute, datetime_array.second)
             self.init_sideral = rad2deg * self.gstime(init_jd)
