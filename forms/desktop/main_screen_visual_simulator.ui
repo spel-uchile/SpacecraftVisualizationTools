@@ -1,0 +1,1843 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1068</width>
+    <height>772</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1024</width>
+    <height>768</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Spacecraft Simulator Viewer</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
+  </property>
+  <property name="documentMode">
+   <bool>true</bool>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>3</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="pushButtonBack">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/back.png</normaloff>icons/back.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>25</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonRun">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/run.png</normaloff>icons/run.png</iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonPause">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/pause.png</normaloff>icons/pause.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>25</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonStop">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/stop.png</normaloff>icons/stop.png</iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonForward">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/forward.png</normaloff>icons/forward.png</iconset>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line_2">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonUp">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/up.png</normaloff>icons/up.png</iconset>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonDown">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border-color: rgb(130, 130, 130);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/down.png</normaloff>icons/down.png</iconset>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_5">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Start time</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDateTimeEdit" name="dateTimeEditStart">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>169</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="dateTime">
+         <datetime>
+          <hour>16</hour>
+          <minute>30</minute>
+          <second>0</second>
+          <year>2021</year>
+          <month>9</month>
+          <day>13</day>
+         </datetime>
+        </property>
+        <property name="maximumDate">
+         <date>
+          <year>3000</year>
+          <month>12</month>
+          <day>31</day>
+         </date>
+        </property>
+        <property name="minimumDate">
+         <date>
+          <year>2000</year>
+          <month>9</month>
+          <day>14</day>
+         </date>
+        </property>
+        <property name="displayFormat">
+         <string>dd-MM-yyyy H:mm:ss.zzz</string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+       <widget class="QLabel" name="label_3">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>2</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>75</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Step (s)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDoubleSpinBox" name="doubleSpinBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>60</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>60</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="minimum">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>60.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.100000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_6">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Final time</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDateTimeEdit" name="dateTimeEdit">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>171</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="dateTime">
+         <datetime>
+          <hour>17</hour>
+          <minute>30</minute>
+          <second>0</second>
+          <year>2021</year>
+          <month>9</month>
+          <day>13</day>
+         </datetime>
+        </property>
+        <property name="maximumDate">
+         <date>
+          <year>3000</year>
+          <month>12</month>
+          <day>31</day>
+         </date>
+        </property>
+        <property name="minimumDate">
+         <date>
+          <year>2000</year>
+          <month>1</month>
+          <day>1</day>
+         </date>
+        </property>
+        <property name="displayFormat">
+         <string>dd-MM-yyyy H:mm:ss.zzz</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBox">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Real time</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="Line" name="line_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QTreeWidget" name="treeWidget">
+        <property name="minimumSize">
+         <size>
+          <width>220</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="lineWidth">
+         <number>2</number>
+        </property>
+        <property name="midLineWidth">
+         <number>1</number>
+        </property>
+        <property name="tabKeyNavigation">
+         <bool>true</bool>
+        </property>
+        <column>
+         <property name="text">
+          <string>Items</string>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="background">
+          <color>
+           <red>79</red>
+           <green>88</green>
+           <blue>130</blue>
+          </color>
+         </property>
+         <property name="foreground">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </property>
+        </column>
+        <item>
+         <property name="text">
+          <string>Satellites</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>SUCHAI</string>
+          </property>
+          <property name="checkState">
+           <enum>Checked</enum>
+          </property>
+          <item>
+           <property name="text">
+            <string>Gyroscope</string>
+           </property>
+           <property name="checkState">
+            <enum>Checked</enum>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Magnetometer</string>
+           </property>
+           <property name="checkState">
+            <enum>Checked</enum>
+           </property>
+          </item>
+         </item>
+        </item>
+        <item>
+         <property name="text">
+          <string>Ground Station</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>FCFM, Santiago</string>
+          </property>
+          <property name="checkState">
+           <enum>Checked</enum>
+          </property>
+         </item>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>800</width>
+          <height>630</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>2000</width>
+          <height>2000</height>
+         </size>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(200, 200, 200);</string>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <property name="documentMode">
+         <bool>false</bool>
+        </property>
+        <property name="tabsClosable">
+         <bool>true</bool>
+        </property>
+        <property name="movable">
+         <bool>true</bool>
+        </property>
+        <property name="tabBarAutoHide">
+         <bool>false</bool>
+        </property>
+        <widget class="QWidget" name="graphics_tab">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>1206</width>
+           <height>1000</height>
+          </size>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <attribute name="title">
+          <string>Graphics</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="tab_groundtrack">
+         <attribute name="title">
+          <string>Groundtrack</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="tab_3dorbit">
+         <attribute name="title">
+          <string>3D Orbit</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="tab_3attitude">
+         <attribute name="title">
+          <string>3D Attitude</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="plots_tab">
+         <attribute name="title">
+          <string>Plots</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <property name="spacing">
+             <number>15</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_7">
+              <property name="spacing">
+               <number>5</number>
+              </property>
+              <property name="sizeConstraint">
+               <enum>QLayout::SetFixedSize</enum>
+              </property>
+              <item>
+               <widget class="Line" name="line">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item alignment="Qt::AlignHCenter|Qt::AlignTop">
+               <widget class="QLabel" name="label">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>200</width>
+                  <height>100</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                  <underline>false</underline>
+                  <strikeout>false</strikeout>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">border-color: rgb(58, 58, 58);</string>
+                </property>
+                <property name="text">
+                 <string>Data variables</string>
+                </property>
+               </widget>
+              </item>
+              <item alignment="Qt::AlignTop">
+               <widget class="QListWidget" name="listWidget">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>1</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>300</width>
+                  <height>400</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>350</width>
+                  <height>1500</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
+                <property name="autoFillBackground">
+                 <bool>false</bool>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(220, 220, 220);</string>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Plain</enum>
+                </property>
+                <property name="selectionMode">
+                 <enum>QAbstractItemView::MultiSelection</enum>
+                </property>
+                <property name="selectionBehavior">
+                 <enum>QAbstractItemView::SelectItems</enum>
+                </property>
+                <property name="resizeMode">
+                 <enum>QListView::Adjust</enum>
+                </property>
+                <property name="sortingEnabled">
+                 <bool>false</bool>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Times</string>
+                 </property>
+                 <property name="checkState">
+                  <enum>Checked</enum>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item alignment="Qt::AlignHCenter|Qt::AlignTop">
+               <widget class="QPushButton" name="PlotSelectedData">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>1</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>150</width>
+                  <height>50</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="tabletTracking">
+                 <bool>false</bool>
+                </property>
+                <property name="layoutDirection">
+                 <enum>Qt::LeftToRight</enum>
+                </property>
+                <property name="text">
+                 <string>Generate</string>
+                </property>
+                <property name="default">
+                 <bool>false</bool>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="Line" name="line_4">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Sunken</enum>
+              </property>
+              <property name="lineWidth">
+               <number>2</number>
+              </property>
+              <property name="midLineWidth">
+               <number>3</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QWidget" name="PlotWidget" native="true">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                <horstretch>20</horstretch>
+                <verstretch>20</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>600</width>
+                <height>450</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>3000</width>
+                <height>2000</height>
+               </size>
+              </property>
+              <property name="contextMenuPolicy">
+               <enum>Qt::NoContextMenu</enum>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(50, 50, 50);</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_adcs">
+         <attribute name="title">
+          <string>ADCS</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="tab_odcs">
+         <attribute name="title">
+          <string>ODCS</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="tab_sc_properties">
+         <attribute name="title">
+          <string>Spacecraft properties</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="tab_orbit_properties">
+         <attribute name="title">
+          <string>Orbit properties</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="tab_attitude_properties">
+         <attribute name="title">
+          <string>Attitude properties</string>
+         </attribute>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>3</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label_4">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>210</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Current Date / Time UTC</string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignLeft">
+       <widget class="QDateTimeEdit" name="dateTimeEditCurrent">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>215</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="date">
+         <date>
+          <year>2022</year>
+          <month>9</month>
+          <day>13</day>
+         </date>
+        </property>
+        <property name="time">
+         <time>
+          <hour>16</hour>
+          <minute>30</minute>
+          <second>22</second>
+         </time>
+        </property>
+        <property name="maximumDate">
+         <date>
+          <year>3000</year>
+          <month>12</month>
+          <day>31</day>
+         </date>
+        </property>
+        <property name="minimumDate">
+         <date>
+          <year>2000</year>
+          <month>9</month>
+          <day>14</day>
+         </date>
+        </property>
+        <property name="displayFormat">
+         <string>dd-MM-yyyy H:mm:ss.zzz</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Maximum</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>1500</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item alignment="Qt::AlignRight|Qt::AlignTop">
+       <widget class="QLabel" name="label_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Progress</string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignRight|Qt::AlignTop">
+       <widget class="QProgressBar" name="progressBar">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>300</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="value">
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1068</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="defaultUp">
+    <bool>false</bool>
+   </property>
+   <property name="nativeMenuBar">
+    <bool>true</bool>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionNew"/>
+    <addaction name="actionClose"/>
+    <addaction name="separator"/>
+    <addaction name="actionLoadCsv"/>
+    <addaction name="actionExport_csv"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSave_as"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuOrbit">
+    <property name="title">
+     <string>Orbit</string>
+    </property>
+    <addaction name="actionUpdate_all_TLE"/>
+    <addaction name="actionUpdate_TLE"/>
+    <addaction name="separator"/>
+    <addaction name="actionODCS_tool"/>
+    <addaction name="separator"/>
+    <addaction name="actionOrbSetting"/>
+   </widget>
+   <widget class="QMenu" name="menuSimulation">
+    <property name="title">
+     <string>Simulation</string>
+    </property>
+    <widget class="QMenu" name="menuDate_and_time">
+     <property name="title">
+      <string>Date and time</string>
+     </property>
+     <addaction name="actionStart_Time"/>
+     <addaction name="actionFinal_Time"/>
+     <addaction name="actionStep"/>
+    </widget>
+    <addaction name="actionRun"/>
+    <addaction name="actionPause"/>
+    <addaction name="actionStop"/>
+    <addaction name="separator"/>
+    <addaction name="menuDate_and_time"/>
+    <addaction name="actionReal_time"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+    <addaction name="separator"/>
+    <addaction name="actionManual"/>
+   </widget>
+   <widget class="QMenu" name="menuEnvironment">
+    <property name="title">
+     <string>Environment</string>
+    </property>
+    <widget class="QMenu" name="menuMagnetic">
+     <property name="title">
+      <string>Magnetic</string>
+     </property>
+     <addaction name="actionActivate"/>
+     <addaction name="actionSave_data"/>
+    </widget>
+    <widget class="QMenu" name="menuSolar_Radiation">
+     <property name="title">
+      <string>Solar Flux</string>
+     </property>
+     <addaction name="actionActivate_2"/>
+     <addaction name="actionSave_data_2"/>
+    </widget>
+    <widget class="QMenu" name="menuAtmosphere">
+     <property name="title">
+      <string>Atmosphere</string>
+     </property>
+     <addaction name="actionActivate_3"/>
+     <addaction name="actionSave_data_3"/>
+    </widget>
+    <addaction name="menuMagnetic"/>
+    <addaction name="menuSolar_Radiation"/>
+    <addaction name="menuAtmosphere"/>
+   </widget>
+   <widget class="QMenu" name="menuSatellite">
+    <property name="title">
+     <string>Spacecraft</string>
+    </property>
+    <addaction name="actionAddSatellite"/>
+    <addaction name="actionRemoveSatellite"/>
+    <addaction name="separator"/>
+    <addaction name="action3DLoad_model"/>
+    <addaction name="separator"/>
+    <addaction name="actionSolar_panel"/>
+    <addaction name="separator"/>
+    <addaction name="actionSCSetting"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionEditSetting"/>
+   </widget>
+   <widget class="QMenu" name="menuAttitude">
+    <property name="title">
+     <string>Attitude</string>
+    </property>
+    <widget class="QMenu" name="menuView_2">
+     <property name="title">
+      <string>View</string>
+     </property>
+     <addaction name="actionResults"/>
+    </widget>
+    <addaction name="actionADCS"/>
+    <addaction name="menuView_2"/>
+    <addaction name="separator"/>
+    <addaction name="actionAttSetting"/>
+   </widget>
+   <widget class="QMenu" name="menuDisturbance">
+    <property name="title">
+     <string>Disturbance</string>
+    </property>
+    <addaction name="actionDrag"/>
+    <addaction name="actionMagnetic"/>
+    <addaction name="actionGravity_gradient"/>
+    <addaction name="actionRadiation_pressure"/>
+   </widget>
+   <widget class="QMenu" name="menuInsert">
+    <property name="title">
+     <string>Insert</string>
+    </property>
+    <widget class="QMenu" name="menuAdd_sensors_2">
+     <property name="title">
+      <string>Add sensors</string>
+     </property>
+     <addaction name="actionMagnetometer_2"/>
+     <addaction name="actionGyroscope"/>
+     <addaction name="actionCoarse_sun_sensor"/>
+     <addaction name="actionFine_sun_sensor"/>
+     <addaction name="actionCamera_2"/>
+     <addaction name="actionStar_tracker"/>
+     <addaction name="separator"/>
+     <addaction name="actionTemperature_sensor"/>
+     <addaction name="separator"/>
+     <addaction name="actionGNNS"/>
+    </widget>
+    <widget class="QMenu" name="menuAdd_actuators_2">
+     <property name="title">
+      <string>Add actuators</string>
+     </property>
+     <addaction name="actionMagnetorquer_2"/>
+     <addaction name="actionReaction_Wheel"/>
+     <addaction name="actionPropulsion"/>
+     <addaction name="separator"/>
+     <addaction name="actionHeaters"/>
+    </widget>
+    <addaction name="menuAdd_sensors_2"/>
+    <addaction name="menuAdd_actuators_2"/>
+    <addaction name="separator"/>
+    <addaction name="actionGround_Station"/>
+    <addaction name="separator"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuSatellite"/>
+   <addaction name="menuOrbit"/>
+   <addaction name="menuAttitude"/>
+   <addaction name="menuInsert"/>
+   <addaction name="menuEnvironment"/>
+   <addaction name="menuDisturbance"/>
+   <addaction name="menuSimulation"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionLoadCsv">
+   <property name="icon">
+    <iconset theme="document-open">
+     <normaloff>../</normaloff>../</iconset>
+   </property>
+   <property name="text">
+    <string>Import csv</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset theme="application-exit">
+     <normaloff>../</normaloff>../</iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionRun">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="edit-undo">
+     <normaloff>../</normaloff>../</iconset>
+   </property>
+   <property name="text">
+    <string>Run</string>
+   </property>
+  </action>
+  <action name="actionPause">
+   <property name="icon">
+    <iconset theme="media-playback-pause">
+     <normaloff>../</normaloff>../</iconset>
+   </property>
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="icon">
+    <iconset theme="media-playback-stop">
+     <normaloff>../</normaloff>../</iconset>
+   </property>
+   <property name="text">
+    <string>Stop</string>
+   </property>
+  </action>
+  <action name="actionGeneratePlot">
+   <property name="icon">
+    <iconset theme="go-bottom">
+     <normaloff>../</normaloff>../</iconset>
+   </property>
+   <property name="text">
+    <string>Generate plot</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset theme="help-about">
+     <normaloff>../</normaloff>../</iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionSave_as">
+   <property name="text">
+    <string>Save as ...</string>
+   </property>
+  </action>
+  <action name="actionUpdate_all_TLE">
+   <property name="text">
+    <string>Update all TLE</string>
+   </property>
+  </action>
+  <action name="actionUpdate_TLE">
+   <property name="text">
+    <string>Update TLE ...</string>
+   </property>
+  </action>
+  <action name="actionOrbSetting">
+   <property name="text">
+    <string>Setting</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actionExport_csv">
+   <property name="text">
+    <string>Export csv</string>
+   </property>
+  </action>
+  <action name="actionAddSatellite">
+   <property name="text">
+    <string>Add</string>
+   </property>
+  </action>
+  <action name="actionRemoveSatellite">
+   <property name="text">
+    <string>Remove</string>
+   </property>
+  </action>
+  <action name="actionEditSetting">
+   <property name="text">
+    <string>Setting</string>
+   </property>
+  </action>
+  <action name="action3DLoad_model">
+   <property name="text">
+    <string>Load 3D model</string>
+   </property>
+  </action>
+  <action name="actionAdd_vector">
+   <property name="text">
+    <string>Add vector</string>
+   </property>
+  </action>
+  <action name="actionActivate">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Activate</string>
+   </property>
+  </action>
+  <action name="actionSave_data">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Save data</string>
+   </property>
+  </action>
+  <action name="actionActivate_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Activate</string>
+   </property>
+  </action>
+  <action name="actionSave_data_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Save data</string>
+   </property>
+  </action>
+  <action name="actionActivate_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Activate</string>
+   </property>
+  </action>
+  <action name="actionSave_data_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Save data</string>
+   </property>
+  </action>
+  <action name="actionSolar_panel">
+   <property name="text">
+    <string>Solar panel</string>
+   </property>
+  </action>
+  <action name="actionAttSetting">
+   <property name="text">
+    <string>Setting</string>
+   </property>
+  </action>
+  <action name="actionManual">
+   <property name="text">
+    <string>Manual</string>
+   </property>
+  </action>
+  <action name="actionSCSetting">
+   <property name="text">
+    <string>Setting</string>
+   </property>
+  </action>
+  <action name="actionReal_time">
+   <property name="text">
+    <string>Real time</string>
+   </property>
+  </action>
+  <action name="actionDrag">
+   <property name="text">
+    <string>Drag</string>
+   </property>
+  </action>
+  <action name="actionMagnetic">
+   <property name="text">
+    <string>Magnetic</string>
+   </property>
+  </action>
+  <action name="actionGravity_gradient">
+   <property name="text">
+    <string>Gravity gradient</string>
+   </property>
+  </action>
+  <action name="actionRadiation_pressure">
+   <property name="text">
+    <string>Radiation pressure</string>
+   </property>
+  </action>
+  <action name="actionMagnetometer">
+   <property name="text">
+    <string>Magnetometer</string>
+   </property>
+  </action>
+  <action name="actionGyro">
+   <property name="text">
+    <string>Gyro</string>
+   </property>
+  </action>
+  <action name="actionCoarse_Sun_Sensor">
+   <property name="text">
+    <string>Coarse Sun Sensor</string>
+   </property>
+  </action>
+  <action name="actionFine_Sun_Sensor">
+   <property name="text">
+    <string>Fine Sun Sensor</string>
+   </property>
+  </action>
+  <action name="actionCamera">
+   <property name="text">
+    <string>Camera</string>
+   </property>
+  </action>
+  <action name="actionStt">
+   <property name="text">
+    <string>Star tracker</string>
+   </property>
+  </action>
+  <action name="actionADCS">
+   <property name="text">
+    <string>ADCS tools</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionODCS">
+   <property name="text">
+    <string>ODCS tools</string>
+   </property>
+  </action>
+  <action name="actionMagnetorquer">
+   <property name="text">
+    <string>Magnetorquer</string>
+   </property>
+  </action>
+  <action name="actionReaction_wheel">
+   <property name="text">
+    <string>Reaction wheel</string>
+   </property>
+  </action>
+  <action name="actionMagnetometer_2">
+   <property name="text">
+    <string>Magnetometer</string>
+   </property>
+  </action>
+  <action name="actionGyroscope">
+   <property name="text">
+    <string>Gyroscope</string>
+   </property>
+  </action>
+  <action name="actionCoarse_sun_sensor">
+   <property name="text">
+    <string>Coarse sun sensor</string>
+   </property>
+  </action>
+  <action name="actionFine_sun_sensor">
+   <property name="text">
+    <string>Fine sun sensor</string>
+   </property>
+  </action>
+  <action name="actionCamera_2">
+   <property name="text">
+    <string>Camera</string>
+   </property>
+  </action>
+  <action name="actionStar_tracker">
+   <property name="text">
+    <string>Star tracker</string>
+   </property>
+  </action>
+  <action name="actionTemperature_sensor">
+   <property name="text">
+    <string>Temperature sensor</string>
+   </property>
+  </action>
+  <action name="actionGNNS">
+   <property name="text">
+    <string>GNSS</string>
+   </property>
+  </action>
+  <action name="actionMagnetorquer_2">
+   <property name="text">
+    <string>Magnetorquer</string>
+   </property>
+  </action>
+  <action name="actionReaction_Wheel">
+   <property name="text">
+    <string>Reaction Wheel</string>
+   </property>
+  </action>
+  <action name="actionPropulsion">
+   <property name="text">
+    <string>Propulsion</string>
+   </property>
+  </action>
+  <action name="actionHeaters">
+   <property name="text">
+    <string>Heaters</string>
+   </property>
+  </action>
+  <action name="actionGround_Station">
+   <property name="text">
+    <string>Ground Station</string>
+   </property>
+  </action>
+  <action name="actionODCS_tool">
+   <property name="text">
+    <string>ODCS tool</string>
+   </property>
+  </action>
+  <action name="actionAdd_vector_2">
+   <property name="text">
+    <string>Add vector</string>
+   </property>
+  </action>
+  <action name="actionAdd_reference_frame">
+   <property name="text">
+    <string>Add reference frame</string>
+   </property>
+  </action>
+  <action name="actionRun_2">
+   <property name="icon">
+    <iconset>
+     <normaloff>run.png</normaloff>run.png</iconset>
+   </property>
+   <property name="text">
+    <string>Run</string>
+   </property>
+  </action>
+  <action name="actionPause_2">
+   <property name="icon">
+    <iconset>
+     <normaloff>pause.png</normaloff>pause.png</iconset>
+   </property>
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </action>
+  <action name="actionStop_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>stop.png</normaloff>stop.png</iconset>
+   </property>
+   <property name="text">
+    <string>Stop</string>
+   </property>
+  </action>
+  <action name="actionback">
+   <property name="icon">
+    <iconset>
+     <normaloff>back.png</normaloff>back.png</iconset>
+   </property>
+   <property name="text">
+    <string>Back</string>
+   </property>
+  </action>
+  <action name="actionForward">
+   <property name="icon">
+    <iconset>
+     <normaloff>forward.png</normaloff>forward.png</iconset>
+   </property>
+   <property name="text">
+    <string>Forward</string>
+   </property>
+  </action>
+  <action name="actionUp">
+   <property name="icon">
+    <iconset>
+     <normaloff>up.png</normaloff>up.png</iconset>
+   </property>
+   <property name="text">
+    <string>Up</string>
+   </property>
+  </action>
+  <action name="actionDown">
+   <property name="icon">
+    <iconset>
+     <normaloff>down.png</normaloff>down.png</iconset>
+   </property>
+   <property name="text">
+    <string>Down</string>
+   </property>
+  </action>
+  <action name="actionAdd_3D_Orbit">
+   <property name="text">
+    <string>Add 3D Orbit</string>
+   </property>
+  </action>
+  <action name="actionAdd_Graphics">
+   <property name="text">
+    <string>Add Graphics</string>
+   </property>
+  </action>
+  <action name="actionAdd_3D_Attitude">
+   <property name="text">
+    <string>Add 3D Attitude</string>
+   </property>
+  </action>
+  <action name="actionAdd_plots">
+   <property name="text">
+    <string>Add plots</string>
+   </property>
+  </action>
+  <action name="actionResults">
+   <property name="text">
+    <string>Results</string>
+   </property>
+  </action>
+  <action name="actionStart_Time">
+   <property name="text">
+    <string>Start Time</string>
+   </property>
+  </action>
+  <action name="actionFinal_Time">
+   <property name="text">
+    <string>Final Time</string>
+   </property>
+  </action>
+  <action name="actionStep">
+   <property name="text">
+    <string>Step</string>
+   </property>
+  </action>
+  <action name="actionAdd_Groundtrack">
+   <property name="text">
+    <string>Add Groundtrack</string>
+   </property>
+  </action>
+  <action name="actionEdit">
+   <property name="text">
+    <string>Edit</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>dateTimeEdit</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>959</x>
+     <y>62</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>875</x>
+     <y>62</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
