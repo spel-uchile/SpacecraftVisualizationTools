@@ -20,7 +20,7 @@ from DataHandler import DataHandler
 from pyquaternion import Quaternion
 from forms.main_screen_2 import Ui_MainWindow
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvas
+from matplotlib.backends.backend_qt5agg import FigureCanvasQT
 from matplotlib.figure import Figure
 from datetime import datetime
 from forms.initial_date_ui import InitDateForm
@@ -74,7 +74,7 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         vlayout.addWidget(self.vtk_widget)
 
         self.preview_plot_widget = QtWidgets.QVBoxLayout(self.window.PlotWidget)
-        self.canvas_ = FigureCanvas(Figure(figsize=(5, 3)))
+        self.canvas_ = FigureCanvasQT(Figure(figsize=(5, 3)))
         self.preview_plot_widget.addWidget(self.canvas_)
         self.plot_canvas = self.canvas_.figure.subplots()
         self.plot_canvas.grid()
@@ -187,7 +187,7 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
             init_jd = self.jday(datetime_array.year, datetime_array.month, datetime_array.day,
                                 datetime_array.hour, datetime_array.minute, datetime_array.second)
             self.init_sideral = rad2deg * self.gstime(init_jd)
-            self.sphere.rotate_z(self.init_sideral)
+            self.sphere.rotate_z(self.init_sideral, inplace=True)
             if self.gs_flag:
                 self.update_gs_location(rad2deg * self.gstime(init_jd))
 
@@ -232,7 +232,7 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
     def update_meshes(self, index):
         if index == 0:
             print('Resetting')
-            self.sphere.rotate_z(-self.current_sideral)
+            self.sphere.rotate_z(-self.current_sideral, inplace=True)
             tr_vector = self.spacecraft_pos_i[0, :] - np.array([0, 0, 34/2])
 
             self.spacecraft_model_2_orbit.translate(-self.spacecraft_model_2_orbit.center_of_mass())
@@ -241,29 +241,29 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
             if self.show_ref_vector_point:
                 self.update_vector_line(self.spacecraft_pos_i[index, :], self.vector_point)
 
-            self.spacecraft_model_2_orbit.translate(tr_vector)
-            self.body_x_i.translate(tr_vector)
-            self.body_y_i.translate(tr_vector)
-            self.body_z_i.translate(tr_vector)
+            self.spacecraft_model_2_orbit.translate(tr_vector, inplace=True)
+            self.body_x_i.translate(tr_vector, inplace=True)
+            self.body_y_i.translate(tr_vector, inplace=True)
+            self.body_z_i.translate(tr_vector, inplace=True)
         else:
             # Update Earth
             sideral = self.earth_av * self.data_handler.stepTime * int(self.time_speed)
             self.current_sideral += sideral
-            self.sphere.rotate_z(sideral)
+            self.sphere.rotate_z(sideral, inplace=True)
             if self.gs_flag:
                 self.update_gs_location(sideral)
 
             # Update Orbit
             tr_vector = self.spacecraft_pos_i[index, :] - self.spacecraft_pos_i[self.last_index, :]
-            self.spacecraft_model_2_orbit.translate(-self.spacecraft_pos_i[self.last_index, :])
+            self.spacecraft_model_2_orbit.translate(-self.spacecraft_pos_i[self.last_index, :], inplace=True)
             self.update_attitude(index, self.spacecraft_model_2_attitude, self.spacecraft_model_2_orbit)
-            self.spacecraft_model_2_orbit.translate(self.spacecraft_pos_i[self.last_index, :])
+            self.spacecraft_model_2_orbit.translate(self.spacecraft_pos_i[self.last_index, :], inplace=True)
             if self.show_ref_vector_point:
                 self.update_vector_line(self.spacecraft_pos_i[index, :], self.vector_point)
-            self.spacecraft_model_2_orbit.translate(tr_vector)
-            self.body_x_i.translate(tr_vector)
-            self.body_y_i.translate(tr_vector)
-            self.body_z_i.translate(tr_vector)
+            self.spacecraft_model_2_orbit.translate(tr_vector, inplace=True)
+            self.body_x_i.translate(tr_vector, inplace=True)
+            self.body_y_i.translate(tr_vector, inplace=True)
+            self.body_z_i.translate(tr_vector, inplace=True)
         # Update widget
         self.vtk_widget.update()
         self.last_index = index
@@ -300,13 +300,13 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         self.vtk_widget.subplot(0, 0)
         new_points = np.array([center_point, center_point + 2e7 * vector_point])
         self.vector_line_from_sc.points = new_points
-        cells = np.full((len(new_points) - 1, 3), 2, dtype=np.int)
-        cells[:, 1] = np.arange(0, len(new_points) - 1, dtype=np.int)
-        cells[:, 2] = np.arange(1, len(new_points), dtype=np.int)
+        cells = np.full((len(new_points) - 1, 3), 2, dtype=np.int64)
+        cells[:, 1] = np.arange(0, len(new_points) - 1, dtype=np.int64)
+        cells[:, 2] = np.arange(1, len(new_points), dtype=np.int64)
         self.vector_line_from_sc.lines = cells
 
     def update_gs_location(self, sideral):
-        self.tar_pos_eci.rotate_z(sideral)
+        self.tar_pos_eci.rotate_z(sideral, inplace=True)
         return
 
     def update_attitude(self, n, sc_model1, sc_model2=None):
@@ -315,12 +315,12 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
         d_quaternion = quaternion_tn * inv_quaternion
 
         k_matrix = d_quaternion.transformation_matrix
-        self.body_x.transform(k_matrix)
-        self.body_y.transform(k_matrix)
-        self.body_z.transform(k_matrix)
-        sc_model1.transform(k_matrix)
+        self.body_x.transform(k_matrix, inplace=True)
+        self.body_y.transform(k_matrix, inplace=True)
+        self.body_z.transform(k_matrix, inplace=True)
+        sc_model1.transform(k_matrix, inplace=True)
         if sc_model2 is not None:
-            sc_model2.transform(k_matrix)
+            sc_model2.transform(k_matrix, inplace=True)
         self.quaternion_t0 = quaternion_tn
 
         if self.show_ref_vector_point:
@@ -338,7 +338,7 @@ class Viewer(GeometricElements, QtWidgets.QMainWindow):
             ang = np.arccos(arg)
             if np.linalg.norm(vec) == 0:
                 vec = np.array([0, 0, 1])
-            self.body_ref_point.transform(Quaternion(axis=vec, angle=ang).transformation_matrix)
+            self.body_ref_point.transform(Quaternion(axis=vec, angle=ang).transformation_matrix, inplace=True)
             self.vector_point = curr_vector_point
 
     def preview_plot_data(self):

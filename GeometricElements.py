@@ -34,7 +34,7 @@ class GeometricElements(object):
         self.vtk_widget.set_background(color='k')
         self.sphere = sphere
         self.vtk_widget.add_mesh(self.sphere, smooth_shading=True, culling='back')
-        self.sphere.rotate_z(0)
+        self.sphere.rotate_z(0, inplace=True)
         self.add_eci_frame()
         self.vtk_widget.view_isometric()
         self.body_ref_point = None
@@ -54,24 +54,24 @@ class GeometricElements(object):
         self.spacecraft_model_2_orbit = pv.PolyData('./Model/PlantSat/PlantSat.stl')
         self.quaternion_t0 = Quaternion(q_t_i2b[0, :])
         self.KMatrix = self.quaternion_t0.transformation_matrix
-        self.spacecraft_model_2_orbit.translate(-np.array([0, 0, 34/2]))
+        self.spacecraft_model_2_orbit.translate(-np.array([0, 0, 34/2]), inplace=True)
         self.spacecraft_model_2_orbit.transform(self.KMatrix)
         self.spacecraft_model_2_orbit.points *= 15000.0
         self.vtk_widget.add_mesh(self.spacecraft_model_2_orbit)
-        self.spacecraft_model_2_orbit.translate(sat_pos_i_0)
+        self.spacecraft_model_2_orbit.translate(sat_pos_i_0, inplace=True)
         self.body_x_i = pv.Arrow(center_ref, [1e4, 0, 0], scale=20e3)
         self.body_y_i = pv.Arrow(center_ref, [0, 1e4, 0], scale=20e3)
         self.body_z_i = pv.Arrow(center_ref, [0, 0, 1e4], scale=20e3)
-
-        self.body_x_i.transform(self.KMatrix.dot(np.identity(4) * np.array([30e5, 15e5, 15e5, 1e5])))
-        self.body_y_i.transform(self.KMatrix.dot(np.identity(4) * np.array([15e5, 30e5, 15e5, 1e5])))
-        self.body_z_i.transform(self.KMatrix.dot(np.identity(4) * np.array([15e5, 15e5, 30e5, 1e5])))
-        self.vtk_widget.add_mesh(self.body_x_i, color=[50, 0, 0])
-        self.vtk_widget.add_mesh(self.body_y_i, color=[0, 50, 0])
-        self.vtk_widget.add_mesh(self.body_z_i, color=[0, 0, 50])
-        self.body_x_i.translate(sat_pos_i_0)
-        self.body_y_i.translate(sat_pos_i_0)
-        self.body_z_i.translate(sat_pos_i_0)
+        self.body_x_i.transform(self.KMatrix.dot(5 * np.identity(4) * np.array([10, 10, 10, 10])), inplace=True)
+        self.body_y_i.transform(self.KMatrix.dot(5 * np.identity(4) * np.array([10, 10, 10, 10])), inplace=True)
+        self.body_z_i.transform(self.KMatrix.dot(5 * np.identity(4) * np.array([10, 10, 10, 10])), inplace=True)
+        self.vtk_widget.add_mesh(self.body_x_i, color=[1, 0, 0])
+        #
+        self.vtk_widget.add_mesh(self.body_y_i, color=[0, 1, 0])
+        self.vtk_widget.add_mesh(self.body_z_i, color=[0, 0, 1])
+        self.body_x_i.translate(sat_pos_i_0, inplace=True)
+        self.body_y_i.translate(sat_pos_i_0, inplace=True)
+        self.body_z_i.translate(sat_pos_i_0, inplace=True)
 
     def add_gs_item(self):
         # Target: Antenna Santiago
@@ -96,7 +96,7 @@ class GeometricElements(object):
         self.vtk_widget.subplot(0, 1)
         self.spacecraft_model_2_attitude = pv.PolyData('./Model/PlantSat/PlantSat.stl')
         self.vtk_widget.add_mesh(self.spacecraft_model_2_attitude, opacity=0.5)
-        self.spacecraft_model_2_attitude.translate(-np.array([0, 0, 34/2]))
+        self.spacecraft_model_2_attitude.translate(-np.array([0, 0, 34/2]), inplace=True)
         self.quaternion_t0 = Quaternion(q_t_i2b[0, :])
         self.KMatrix = self.quaternion_t0.transformation_matrix
         self.spacecraft_model_2_attitude.transform(self.KMatrix)
@@ -116,19 +116,19 @@ class GeometricElements(object):
         self.body_y = pv.Arrow(center_ref, [0, 1, 0])
         self.body_z = pv.Arrow(center_ref, [0, 0, 1])
 
-        self.body_x.transform(self.KMatrix.dot(np.identity(4) * np.array([30, 15, 15, 1])))
-        self.body_y.transform(self.KMatrix.dot(np.identity(4) * np.array([15, 30, 15, 1])))
-        self.body_z.transform(self.KMatrix.dot(np.identity(4) * np.array([15, 15, 30, 1])))
-        self.vtk_widget.add_mesh(self.body_x, color=[50, 0, 0], opacity=0.2)
-        self.vtk_widget.add_mesh(self.body_y, color=[0, 50, 0], opacity=0.2)
-        self.vtk_widget.add_mesh(self.body_z, color=[0, 0, 50], opacity=0.2)
+        self.body_x.transform(self.KMatrix.dot(np.identity(4) * np.array([30, 15, 15, 1])), inplace=True)
+        self.body_y.transform(self.KMatrix.dot(np.identity(4) * np.array([15, 30, 15, 1])), inplace=True)
+        self.body_z.transform(self.KMatrix.dot(np.identity(4) * np.array([15, 15, 30, 1])), inplace=True)
+        self.vtk_widget.add_mesh(self.body_x, color=[1, 0, 0], opacity=0.2)
+        self.vtk_widget.add_mesh(self.body_y, color=[0, 1, 0], opacity=0.2)
+        self.vtk_widget.add_mesh(self.body_z, color=[0, 0, 1], opacity=0.2)
 
         if show_ref_vector_point:
             if vector_point is None:
                 vector_point = np.array([0, 0, 1])
             self.body_ref_point = pv.Arrow(center_ref, vector_point)
             self.body_ref_point.transform(np.identity(4) * np.array([25, 25, 25, 1]))
-            self.vtk_widget.add_mesh(self.body_ref_point, color=[60, 63, 65])
+            self.vtk_widget.add_mesh(self.body_ref_point, color=[0.6, 0.6, 0.6])
         self.vtk_widget.show_axes()
         self.vtk_widget.view_isometric()
 
@@ -141,9 +141,9 @@ class GeometricElements(object):
 
     def add_eci_frame(self):
         self.vtk_widget.subplot(0, 0)
-        self.vtk_widget.add_lines(np.array([[0, 0, 0], [1e7, 0, 0]]), color=[50, 0, 0], width=2, label='X-axis')
-        self.vtk_widget.add_lines(np.array([[0, 0, 0], [0, 1e7, 0]]), color=[0, 50, 0], width=2, label='Y-axis')
-        self.vtk_widget.add_lines(np.array([[0, 0, 0], [0, 0, 1e7]]), color=[0, 0, 50], width=2, label='Z-axis')
+        self.vtk_widget.add_lines(np.array([[0, 0, 0], [1e7, 0, 0]]), color=[1, 0, 0], width=2, label='X-axis')
+        self.vtk_widget.add_lines(np.array([[0, 0, 0], [0, 1e7, 0]]), color=[0, 1, 0], width=2, label='Y-axis')
+        self.vtk_widget.add_lines(np.array([[0, 0, 0], [0, 0, 1e7]]), color=[0, 0, 1], width=2, label='Z-axis')
 
     def geodetic_to_ecef(self, tar_alt, tar_long, tar_lat):
         a2 = 40680631.6  # Equatorial radius
